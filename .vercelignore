@@ -1,0 +1,11 @@
+# Internal/source-only files — do not publish with the static website
+.github/
+docs/
+supabase/
+README.md
+LICENSE
+package-lock.json
+files.zip
+council.html
+dvl-rebranded.html
+.env.example
