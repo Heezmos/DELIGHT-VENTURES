@@ -1,0 +1,7 @@
+project_id = "ialobcshxbesmncngixx"
+
+[functions.contact-message]
+verify_jwt = false
+
+[functions.reply-contact-message]
+verify_jwt = true
