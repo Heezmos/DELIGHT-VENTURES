@@ -1,0 +1,59 @@
+name: Refine DVL Website
+
+on:
+  push:
+    paths:
+      - '.github/workflows/refine-dvl.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  refine:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+      - name: Refine finalized DVL content
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+
+          p = Path('index.html')
+          s = p.read_text(encoding='utf-8')
+
+          replacements = {
+            '<!-- ═══ THREE PILLARS ═══ -->': '<!-- ═══ THREE SERVICE DIVISIONS ═══ -->',
+            '<li>Licenses &amp; permits</li>': '<li>Business licensing support</li>',
+            '<li>Mobile application setup</li>\n        <li>WhatsApp-integrated platforms</li>': '<li>WhatsApp Business integration</li>',
+            '<li>Promotional content &amp; commercial visuals</li>\n        <li>Promotional &amp; commercial content</li>\n        <li>Branding visuals</li>': '<li>Promotional content</li>\n        <li>Commercial visuals</li>',
+            "Whether you're starting a new business, upgrading your digital presence, or enhancing your brand, Delight Ventures Limited is here to help you Build. Digitize. Elevate.": "Whether you're launching a business, digitizing your operations, or strengthening your market presence, Delight Ventures Limited brings the support, systems, and creative expertise you need in one place.",
+            '<p class="cta-sub">Powering the Future of Business.</p>': '<p class="cta-sub">Helping Businesses Launch. Digitize. Grow.</p>',
+            "Ready to build, digitize, or elevate your business? We'd love to hear from you.": "Ready to launch, digitize, or grow your business? Tell us what you need and our team will guide you to the right DVL service.",
+            "Whether you're a potential client, partner, or investor — Delight Ventures Limited is ready to collaborate and help your business grow.": "Whether you need help establishing your business, implementing a digital system, or creating professional visual content, Delight Ventures Limited is ready to support your next step.",
+          }
+
+          for old, new in replacements.items():
+              if old not in s:
+                  print(f'NOTICE: pattern not found: {old[:80]}')
+              s = s.replace(old, new)
+
+          p.write_text(s, encoding='utf-8')
+
+          f = Path('supabase/functions/contact-message/index.ts')
+          t = f.read_text(encoding='utf-8')
+          t = t.replace('Delight Ventures Limited<br>Build. Grow. Power. Tomorrow.', 'Delight Ventures Limited<br>Helping Businesses Launch. Digitize. Grow.')
+          f.write_text(t, encoding='utf-8')
+          PY
+      - name: Commit refinements
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add index.html supabase/functions/contact-message/index.ts
+          if git diff --cached --quiet; then
+            echo "No changes required"
+            exit 0
+          fi
+          git commit -m "Polish DVL website around finalized service model"
+          git push origin main
