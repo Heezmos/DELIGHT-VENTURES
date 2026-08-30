@@ -120,7 +120,7 @@ Deno.serve(async (req: Request) => {
       from: fromEmail,
       to: [email],
       subject: `We received your message — ${contact.reference_no}`,
-      html: `<h2>Thank you for contacting Delight Ventures</h2><p>Hello ${fullName},</p><p>We have received your message and our team will review it shortly.</p><p><strong>Your enquiry reference is ${contact.reference_no}.</strong></p><p>Please keep this reference if you need to follow up.</p><p>Delight Ventures Limited<br>Build. Grow. Power. Tomorrow.</p>`,
+      html: `<h2>Thank you for contacting Delight Ventures</h2><p>Hello ${fullName},</p><p>We have received your message and our team will review it shortly.</p><p><strong>Your enquiry reference is ${contact.reference_no}.</strong></p><p>Please keep this reference if you need to follow up.</p><p>Delight Ventures Limited<br>Helping Businesses Launch, Digitize & Grow.</p>`,
     });
 
     return json({
