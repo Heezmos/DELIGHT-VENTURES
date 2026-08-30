@@ -1,0 +1,125 @@
+name: Refine DVL current service model
+on:
+  push:
+    paths:
+      - '.github/workflows/refine-dvl-current-model.yml'
+permissions:
+  contents: write
+jobs:
+  refine:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Refine current public website
+        shell: bash
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import re
+
+          files = [Path('index.html'), Path('dvl-rebranded.html')]
+          replacements = {
+            'Delight Ventures Limited — Build. Digitize. Elevate.': 'Delight Ventures Limited — Helping Businesses Launch, Digitize & Grow',
+            'Business &amp; Digital Solutions · Freetown, Sierra Leone': 'Business Solutions · Freetown, Sierra Leone',
+            'Build · Digitize · Elevate': 'Helping Businesses Launch · Digitize · Grow',
+            'Empowering entrepreneurs, startups, SMEs, and organizations to establish, transform, and grow their businesses through innovative technology, business consultancy, and creative media.': 'Helping entrepreneurs, startups, SMEs, and organizations establish strong business foundations, digitize their operations, and strengthen their market presence through business support, digital systems, and professional creative media.',
+            'Our Three Service Pillars': 'Our Services',
+            '<h2 class="sec-title">Build. Digitize. Elevate.</h2>': '<h2 class="sec-title">Three Service Divisions. One Business Partner.</h2>',
+            'Three integrated pillars that take businesses from legal establishment through digital transformation to a powerful brand presence — all from one trusted partner.': 'Three connected service divisions designed to support businesses from establishment through digital transformation and professional market visibility — all through one trusted partner.',
+            '<div class="pillar-word">Build</div>': '<div class="pillar-word">Launch</div>',
+            '<div class="pillar-word">Elevate</div>': '<div class="pillar-word">Grow</div>',
+            '<h3>Business Registration &amp; Compliance</h3>': '<h3>Business &amp; Compliance Services</h3>',
+            'Start your business with confidence. We help entrepreneurs and organizations establish legally compliant businesses through registration, tax setup, licensing, NASSIT registration, and professional business consultancy.': 'Establish your business with the right administrative foundation. We support entrepreneurs and organizations with business registration, tax registration, NASSIT setup, licensing support, and practical business consultancy.',
+            '<h3>Websites, Ecommerce &amp; Business Systems</h3>': '<h3>Digital Solutions &amp; Systems</h3>',
+            'Transform your business with modern digital solutions. From professional websites and ecommerce platforms to ERP, CRM, HRM, mobile applications, payment integration, and inventory management systems.': 'Digitize your operations with practical technology built around your business. We deliver corporate websites, ecommerce platforms, ERP, CRM and HRM systems, payment integrations, inventory systems, and WhatsApp Business integrations.',
+            '<li>Corporate websites &amp; ecommerce platforms</li>\n        <li>ERP, CRM &amp; HRM systems</li>\n        <li>Payment gateway &amp; inventory integration</li>': '<li>Corporate websites &amp; ecommerce platforms</li>\n        <li>ERP, CRM &amp; HRM systems</li>\n        <li>Payment gateway &amp; inventory systems</li>\n        <li>WhatsApp Business integration</li>',
+            '<h3>Photography &amp; Videography</h3>': '<h3>Creative Media Services</h3>',
+            'Bring your brand to life through compelling visual storytelling. Our photography and videography services help businesses showcase their products, services, events, and corporate identity with professional-quality content.': 'Strengthen your market presence through professional visual storytelling. We create corporate, event, product, promotional, and commercial photography and videography for businesses and organizations.',
+            '<li>Corporate shoots</li>\n        <li>Event coverage</li>\n        <li>Product photography</li>': '<li>Corporate photography &amp; videography</li>\n        <li>Event coverage</li>\n        <li>Product photography &amp; videography</li>\n        <li>Promotional content &amp; commercial visuals</li>',
+            '<small>Build. Digitize. Elevate.</small>': '<small>Helping Businesses Launch, Digitize &amp; Grow.</small>',
+            'A business and digital solutions company empowering entrepreneurs, SMEs, and organizations in Sierra Leone and across Africa.': 'A business solutions company helping entrepreneurs, SMEs, and organizations launch, digitize, and grow through business support, digital systems, and creative media services.',
+            '<option>Business Registration &amp; Compliance</option>\n            <option>Website &amp; Ecommerce Setup</option>\n            <option>ERP / CRM / Business Systems</option>\n            <option>Photography &amp; Videography</option>': '<option>Business &amp; Compliance Services</option>\n            <option>Digital Solutions &amp; Systems</option>\n            <option>Creative Media Services</option>',
+            'const API_URL = "https://your-backend.railway.app/contact";': 'const API_URL = "https://ialobcshxbesmncngixx.supabase.co/functions/v1/contact-message";',
+          }
+
+          consent_block = '''        <div class="fg" style="display:none" aria-hidden="true"><label>Company Website</label><input id="f-company-website" type="text" tabindex="-1" autocomplete="off"/></div>\n        <div class="fg"><label style="display:flex;align-items:flex-start;gap:10px;font-weight:400;line-height:1.5"><input id="f-consent" type="checkbox" required style="width:auto;margin-top:4px"/> I agree that Delight Ventures Limited may use the information I provide to respond to this enquiry.</label></div>\n'''
+
+          new_handler = '''async function handleForm(e) {
+            e.preventDefault();
+            const btn=document.getElementById('submitBtn');
+            const ok=document.getElementById('fs-ok');
+            const err=document.getElementById('fs-err');
+            const name=document.getElementById('f-name').value.trim();
+            const email=document.getElementById('f-email').value.trim();
+            const service=document.getElementById('f-service').value||'General Inquiry';
+            const message=document.getElementById('f-msg').value.trim();
+            const consent=document.getElementById('f-consent')?.checked===true;
+            const honeypot=document.getElementById('f-company-website')?.value||'';
+            if(!name||!email||!message){
+              err.textContent='Please fill in your name, email, and message.';
+              err.style.display='block';
+              setTimeout(()=>err.style.display='none',4000);return;
+            }
+            if(!consent){
+              err.textContent='Please confirm that we may use your information to respond to this enquiry.';
+              err.style.display='block';
+              setTimeout(()=>err.style.display='none',4000);return;
+            }
+            btn.disabled=true;btn.textContent='Sending…';
+            ok.style.display='none';err.style.display='none';
+            try{
+              const res=await fetch(API_URL,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({
+                full_name:name,
+                email,
+                service_interest:service,
+                preferred_contact_method:'email',
+                message,
+                consent,
+                company_website:honeypot
+              })});
+              const data=await res.json().catch(()=>({}));
+              if(!res.ok) throw new Error(data.error||'Unable to send your message.');
+              const ref=data.reference_no?` Reference: ${data.reference_no}.`:'';
+              ok.textContent='Thank you. Your enquiry has been received.'+ref;
+              ok.style.display='block';
+              e.target.reset();
+            }catch(error){
+              err.textContent=error.message||'We could not send your message right now. Please try again shortly.';
+              err.style.display='block';
+            }finally{
+              btn.disabled=false;btn.textContent='Send Message';
+            }
+          }'''
+
+          for path in files:
+            if not path.exists():
+              continue
+            text = path.read_text(encoding='utf-8')
+            original = text
+            for old,new in replacements.items():
+              text = text.replace(old,new)
+            if 'id="f-consent"' not in text:
+              marker = '        <button type="submit" class="submit-btn" id="submitBtn">'
+              text = text.replace(marker, consent_block + marker)
+            text = re.sub(r'async function handleForm\(e\) \{.*?\n\}', new_handler, text, count=1, flags=re.S)
+            path.write_text(text, encoding='utf-8')
+            print(path, 'changed' if text != original else 'unchanged')
+
+          fn = Path('supabase/functions/contact-message/index.ts')
+          if fn.exists():
+            text = fn.read_text(encoding='utf-8')
+            text = text.replace('Delight Ventures Limited<br>Build. Grow. Power. Tomorrow.', 'Delight Ventures Limited<br>Helping Businesses Launch, Digitize & Grow.')
+            fn.write_text(text, encoding='utf-8')
+          PY
+      - name: Commit refined website
+        shell: bash
+        run: |
+          if git diff --quiet; then
+            echo "No website changes required"
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add index.html dvl-rebranded.html supabase/functions/contact-message/index.ts
+          git commit -m "Refine DVL website for Launch Digitize Grow model"
+          git push
