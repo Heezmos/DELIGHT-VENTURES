@@ -13,7 +13,7 @@
 <script>
 (async()=>{
   try{
-    const res=await fetch('/dvl-rebranded.html',{cache:'no-store'});
+    const res=await fetch('./dvl-rebranded.html',{cache:'no-store'});
     if(!res.ok) throw new Error('Unable to load website');
     let html=await res.text();
     const replacements=[
