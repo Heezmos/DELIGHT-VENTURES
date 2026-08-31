@@ -1,0 +1,57 @@
+name: DVL Frontend Conversion Fix
+
+on:
+  push:
+    branches:
+      - frontend-conversion-fix
+
+permissions:
+  contents: write
+
+jobs:
+  apply-and-validate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout branch
+        uses: actions/checkout@v4
+        with:
+          ref: frontend-conversion-fix
+          fetch-depth: 0
+
+      - name: Apply conversion fix
+        run: python scripts/fix_frontend_conversion.py
+
+      - name: Validate generated frontend
+        shell: bash
+        run: |
+          set -euo pipefail
+          ! grep -nE '<<<<<<<|>>>>>>>' index.html
+          test "$(grep -o "modalRequestBtn')?.addEventListener('click'" index.html | wc -l)" -eq 1
+          grep -q 'id="f-organization"' index.html
+          grep -q 'id="f-phone"' index.html
+          grep -q 'id="f-contact-method"' index.html
+          python - <<'PY'
+          from pathlib import Path
+          import re
+          html = Path('index.html').read_text(encoding='utf-8')
+          scripts = re.findall(r'<script(?:\s[^>]*)?>(.*?)</script>', html, flags=re.S|re.I)
+          Path('/tmp/dvl-inline.js').write_text('\n'.join(scripts), encoding='utf-8')
+          print(f'Validated {len(scripts)} inline script block(s)')
+          PY
+          node --check /tmp/dvl-inline.js
+
+      - name: Commit only production frontend change
+        shell: bash
+        run: |
+          set -euo pipefail
+          rm -f scripts/fix_frontend_conversion.py .github/workflows/frontend-conversion-fix.yml
+          rmdir scripts 2>/dev/null || true
+          rmdir .github/workflows 2>/dev/null || true
+          rmdir .github 2>/dev/null || true
+          git config user.name "DVL Build Bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add -A
+          git diff --cached --check
+          git diff --cached --quiet && exit 0
+          git commit -m "Fix DVL frontend conversion flow"
+          git push origin HEAD:frontend-conversion-fix
