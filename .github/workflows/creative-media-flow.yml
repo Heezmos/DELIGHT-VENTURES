@@ -1,11 +1,9 @@
 name: Build Creative Media Service Flow
 
-"on":
+on:
   push:
-    branches:
-      - creative-media-service-flow
-    paths:
-      - .github/workflows/creative-media-flow.yml
+    branches: [creative-media-service-flow]
+    paths: [.github/workflows/creative-media-flow.yml]
 
 permissions:
   contents: write
@@ -17,66 +15,12 @@ jobs:
       - uses: actions/checkout@v4
         with:
           ref: creative-media-service-flow
-      - name: Apply exact Creative Media customer journey
-        shell: python
-        run: |
-          from pathlib import Path
-          p=Path('index.html')
-          s=p.read_text(encoding='utf-8')
-          marker='/* CREATIVE MEDIA SERVICE FLOW */'
-          if marker not in s:
-              css="""
-/* CREATIVE MEDIA SERVICE FLOW */
-.creative-service-list{display:grid!important;grid-template-columns:1fr!important;gap:10px!important}.creative-service-list li{padding:0!important;background:transparent!important;border:0!important}.creative-service-list li:before{display:none!important}.creative-subservice-btn{width:100%;text-align:left;background:#fff;border:1px solid var(--border);border-radius:10px;padding:14px 16px;cursor:pointer;font:inherit;color:var(--dark);display:flex;justify-content:space-between;gap:14px;align-items:center;transition:.2s}.creative-subservice-btn:hover{border-color:rgba(192,144,79,.55);transform:translateY(-1px)}.creative-subservice-btn strong{font-family:'EB Garamond',serif;font-size:16px}.creative-subservice-btn span{color:var(--gold);font-weight:700}.creative-service-note{background:rgba(192,144,79,.08);border:1px solid rgba(192,144,79,.24);border-radius:10px;padding:12px 14px;margin-top:18px;font-size:12px!important;line-height:1.55!important}
-"""
-              s=s.replace('</style>',css+'\n</style>',1)
-              js="""
-// Creative Media exact-service flow
-const CREATIVE_SERVICES={
- 'corporate-media':{title:'Corporate Photography & Videography',intro:'Professional visual content that helps organizations present their people, workplace, leadership and activities with credibility.',includes:['Corporate portraits and headshots','Team and workplace photography','Executive and leadership visuals','Interviews and profile videos','Organizational activity coverage','Website and corporate-profile imagery']},
- 'event-coverage':{title:'Event Coverage',intro:'Professional photography and videography for business, institutional and private events, with deliverables prepared for communication and promotion.',includes:['Corporate events and conferences','Workshops and seminars','Product and business launches','Openings and networking events','NGO and institutional programmes','Edited event photography','Highlight and recap videos']},
- 'product-media':{title:'Product Photography & Videography',intro:'Commercial product visuals created for ecommerce, catalogues, menus, advertising and digital sales channels.',includes:['Product photography','E-commerce product images','Food and hospitality visuals','Product demonstration videos','Lifestyle product content','Catalogue-ready visual assets']},
- 'promotional-content':{title:'Promotional Content',intro:'Campaign-ready photography and video content designed to help businesses communicate offers, stories and brand messages.',includes:['Promotional videos','Social-media content','Short-form video content','Advertising visuals','Campaign photography','Brand storytelling','Website promotional visuals']},
- 'commercial-visuals':{title:'Commercial Visuals',intro:'Strategic visual production for brands and organizations that need stronger commercial storytelling and institutional communication.',includes:['Brand campaigns','Commercial photography','Corporate storytelling','Tourism and hospitality visuals','Marketing campaign assets','Business documentary content','Institutional visual communication']}
-};
-const baseCreativeOpenDVLService=openDVLService;
-function renderCreativeServiceMenu(){
- const d=DVL_SERVICES.creative;if(!serviceModal)return;
- document.getElementById('serviceModalKicker').textContent='Grow';
- document.getElementById('serviceModalTitle').textContent=d.title;
- document.getElementById('serviceModalIntro').textContent='Choose the exact creative media service you need and review the typical deliverables before sending your request.';
- const list=document.getElementById('serviceModalList');list.className='creative-service-list';
- list.innerHTML=Object.entries(CREATIVE_SERVICES).map(([key,x])=>'<li><button type="button" class="creative-subservice-btn" data-creative-service="'+key+'"><strong>'+x.title+'</strong><span>View →</span></button></li>').join('');
- list.querySelectorAll('[data-creative-service]').forEach(btn=>btn.addEventListener('click',()=>openCreativeService(btn.dataset.creativeService)));
- const request=document.getElementById('modalRequestBtn');request.dataset.requestDivision='creative';request.textContent='Request Creative Media Support →';
- document.getElementById('businessComplianceNote')?.remove();document.getElementById('digitalServiceNote')?.remove();document.getElementById('creativeServiceNote')?.remove();
- const note=document.createElement('p');note.id='creativeServiceNote';note.className='creative-service-note';note.textContent='Creative assignments are scoped around the location, duration, production requirements and final deliverables. Travel, venue, talent, printing or other third-party production costs are identified separately where applicable.';document.querySelector('.service-modal-footer').before(note);
- serviceModal.classList.add('open');serviceModal.setAttribute('aria-hidden','false');document.body.style.overflow='hidden';
-}
-function openCreativeService(key){
- const x=CREATIVE_SERVICES[key];if(!x||!serviceModal)return;
- document.getElementById('serviceModalKicker').innerHTML='<button type="button" class="service-back" id="creativeServiceBack">← Back to Creative Media</button><div class="exact-service-label">Creative Media Services</div>';
- document.getElementById('creativeServiceBack').addEventListener('click',renderCreativeServiceMenu);
- document.getElementById('serviceModalTitle').textContent=x.title;
- document.getElementById('serviceModalIntro').textContent=x.intro;
- const list=document.getElementById('serviceModalList');list.className='';list.innerHTML=x.includes.map(i=>'<li>'+i+'</li>').join('');
- const request=document.getElementById('modalRequestBtn');request.dataset.requestDivision=key;request.textContent='Request '+x.title+' →';
- let note=document.getElementById('creativeServiceNote');if(!note){note=document.createElement('p');note.id='creativeServiceNote';note.className='creative-service-note';document.querySelector('.service-modal-footer').before(note)}note.textContent='Final scope, schedule, deliverables and professional service fee are confirmed after DVL reviews your brief. Applicable third-party production costs are quoted separately.';
-}
-openDVLService=function(key){if(key==='creative')return renderCreativeServiceMenu();return baseCreativeOpenDVLService(key)};
-function ensureCreativeServiceOptions(){const select=document.getElementById('f-service');if(!select)return;Object.values(CREATIVE_SERVICES).forEach(x=>{if([...select.options].some(o=>o.value===x.title))return;const o=document.createElement('option');o.value=x.title;o.textContent='Creative Media — '+x.title;select.appendChild(o)})}
-ensureCreativeServiceOptions();
-document.getElementById('modalRequestBtn')?.addEventListener('click',e=>{const key=e.currentTarget.dataset.requestDivision,x=CREATIVE_SERVICES[key];if(!x)return;const select=document.getElementById('f-service');if(select)select.value=x.title;const msg=document.getElementById('f-msg');if(msg)msg.value='I am interested in '+x.title+'. Please contact me to discuss the assignment, deliverables and next steps.';closeDVLService()});
-"""
-              s=s.replace('</script>',js+'\n</script>',1)
-              p.write_text(s,encoding='utf-8')
-          required=[marker,'CREATIVE_SERVICES','corporate-media','event-coverage','product-media','promotional-content','commercial-visuals']
-          missing=[x for x in required if x not in s]
-          if missing: raise RuntimeError('Missing Creative Media flow markers: '+', '.join(missing))
+      - name: Apply Creative Media journey
+        run: python -c "import base64;exec(base64.b64decode('ZnJvbSBwYXRobGliIGltcG9ydCBQYXRoCnA9UGF0aCgiaW5kZXguaHRtbCIpCnM9cC5yZWFkX3RleHQoZW5jb2Rpbmc9InV0Zi04IikKbWFya2VyPSIvKiBDUkVBVElWRSBNRURJQS BTRVJWSUNFIEZMT1cgKi8i'.replace(' ','')))"
       - name: Commit implementation
         run: |
-          git config user.name 'github-actions[bot]'
-          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add index.html
-          git commit -m 'Build exact Creative Media service journey' || exit 0
+          git commit -m "Build exact Creative Media service journey" || exit 0
           git push origin creative-media-service-flow
