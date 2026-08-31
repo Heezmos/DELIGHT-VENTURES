@@ -1,0 +1,77 @@
+name: Build Business Compliance Service Flow
+on:
+  push:
+    branches: [business-compliance-service-flow]
+    paths: ['.github/workflows/business-compliance-flow.yml']
+permissions:
+  contents: write
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: business-compliance-service-flow
+      - name: Apply exact-service customer journey
+        shell: python
+        run: |
+          from pathlib import Path
+          p=Path('index.html')
+          s=p.read_text(encoding='utf-8')
+          marker='/* BUSINESS COMPLIANCE SERVICE FLOW */'
+          if marker not in s:
+            css='''
+/* BUSINESS COMPLIANCE SERVICE FLOW */
+.business-service-list{display:grid!important;grid-template-columns:1fr!important;gap:10px!important}.business-service-list li{padding:0!important;background:transparent!important;border:0!important}.business-service-list li:before{display:none!important}.subservice-btn{width:100%;text-align:left;background:#fff;border:1px solid var(--border);border-radius:10px;padding:14px 16px;cursor:pointer;font:inherit;color:var(--dark);display:flex;justify-content:space-between;gap:14px;align-items:center;transition:.2s}.subservice-btn:hover{border-color:rgba(192,144,79,.55);transform:translateY(-1px)}.subservice-btn strong{font-family:'EB Garamond',serif;font-size:16px}.subservice-btn span{color:var(--gold);font-weight:700}.service-back{border:0;background:transparent;color:var(--gold);font:inherit;font-weight:700;cursor:pointer;padding:0 0 12px}.compliance-note{background:rgba(192,144,79,.08);border:1px solid rgba(192,144,79,.24);border-radius:10px;padding:12px 14px;margin-top:18px;font-size:12px!important;line-height:1.55!important}.exact-service-label{font-size:12px;color:var(--gold);font-weight:700;margin:0 0 6px!important;text-transform:uppercase;letter-spacing:1.2px}
+'''
+            s=s.replace('</style>',css+'\n</style>',1)
+            js='''
+// Business & Compliance exact-service flow
+const BUSINESS_SERVICES={
+ 'business-registration':{title:'Business Registration',intro:'Administrative support to help entrepreneurs and organizations prepare and coordinate the business registration process.',includes:['Initial registration consultation','Business structure guidance','Registration-document preparation','Application support and process coordination','Follow-up during the registration process','Post-registration guidance']},
+ 'tax-registration':{title:'Tax Registration',intro:'Practical support with preparing and coordinating the documentation needed for business tax registration.',includes:['Tax-registration guidance','Required-document preparation','Application assistance','Tax identification setup support','Application follow-up','Basic compliance orientation']},
+ 'nassit-setup':{title:'NASSIT Setup',intro:'Administrative support for employers preparing to complete NASSIT registration and establish their employee-registration process.',includes:['Employer registration support','Required-document preparation','Employee-registration assistance','Administrative setup guidance','Contribution-process orientation','Registration follow-up']},
+ 'licensing-support':{title:'Business Licensing Support',intro:'Guidance and administrative support for businesses identifying and preparing for relevant licensing requirements.',includes:['Licensing requirement assessment','Documentation checklist','Application preparation support','Process guidance','Application follow-up','Renewal support where applicable']},
+ 'business-consultancy':{title:'Business Consultancy',intro:'Practical advisory support for entrepreneurs and organizations strengthening their business model, operations and growth plans.',includes:['Startup and business advisory','Business-model development','Business planning','Basic market research','Process and operational development','Growth and digitalization recommendations','Business documentation and technology recommendations']}
+};
+const baseOpenDVLService=openDVLService;
+function renderBusinessServiceMenu(){
+ const d=DVL_SERVICES.business;if(!serviceModal)return;
+ document.getElementById('serviceModalKicker').textContent='Launch';
+ document.getElementById('serviceModalTitle').textContent=d.title;
+ document.getElementById('serviceModalIntro').textContent='Choose the exact service you need. You can review what is included before sending your request.';
+ const list=document.getElementById('serviceModalList');list.className='business-service-list';
+ list.innerHTML=Object.entries(BUSINESS_SERVICES).map(([key,x])=>'<li><button type="button" class="subservice-btn" data-business-service="'+key+'"><strong>'+x.title+'</strong><span>View →</span></button></li>').join('');
+ list.querySelectorAll('[data-business-service]').forEach(btn=>btn.addEventListener('click',()=>openBusinessService(btn.dataset.businessService)));
+ const request=document.getElementById('modalRequestBtn');request.dataset.requestDivision='business';request.textContent='Request Business & Compliance Support →';
+ const old=document.getElementById('businessComplianceNote');if(old)old.remove();
+ const note=document.createElement('p');note.id='businessComplianceNote';note.className='compliance-note';note.textContent='DVL provides registration, documentation and process support. Registrations, tax identifiers, NASSIT registrations and licences are issued by the relevant authorities.';document.querySelector('.service-modal-footer').before(note);
+ serviceModal.classList.add('open');serviceModal.setAttribute('aria-hidden','false');document.body.style.overflow='hidden';
+}
+function openBusinessService(key){
+ const x=BUSINESS_SERVICES[key];if(!x||!serviceModal)return;
+ document.getElementById('serviceModalKicker').innerHTML='<button type="button" class="service-back" id="businessServiceBack">← Back to Business & Compliance</button><div class="exact-service-label">Business & Compliance Service</div>';
+ document.getElementById('businessServiceBack').addEventListener('click',renderBusinessServiceMenu);
+ document.getElementById('serviceModalTitle').textContent=x.title;
+ document.getElementById('serviceModalIntro').textContent=x.intro;
+ const list=document.getElementById('serviceModalList');list.className='';list.innerHTML=x.includes.map(i=>'<li>'+i+'</li>').join('');
+ const request=document.getElementById('modalRequestBtn');request.dataset.requestDivision=key;request.textContent='Request '+x.title+' →';
+ let note=document.getElementById('businessComplianceNote');if(!note){note=document.createElement('p');note.id='businessComplianceNote';note.className='compliance-note';document.querySelector('.service-modal-footer').before(note)}note.textContent='DVL provides administrative, documentation and process support. The relevant authority is responsible for issuing registrations, identifiers or licences.';
+}
+openDVLService=function(key){if(key==='business')return renderBusinessServiceMenu();return baseOpenDVLService(key)};
+function ensureExactServiceOptions(){const select=document.getElementById('f-service');if(!select)return;Object.values(BUSINESS_SERVICES).forEach(x=>{if([...select.options].some(o=>o.value===x.title))return;const o=document.createElement('option');o.value=x.title;o.textContent='Business & Compliance — '+x.title;const general=[...select.options].find(o=>o.textContent.includes('Digital Solutions'));select.insertBefore(o,general||null)})}
+ensureExactServiceOptions();
+const exactRequest=document.getElementById('modalRequestBtn');exactRequest?.addEventListener('click',e=>{const key=e.currentTarget.dataset.requestDivision,x=BUSINESS_SERVICES[key];if(!x)return;const select=document.getElementById('f-service');if(select)select.value=x.title;const msg=document.getElementById('f-msg');if(msg)msg.value='I am interested in '+x.title+'. Please contact me to discuss the requirements and next steps.';closeDVLService()});
+'''
+            s=s.replace('</script>',js+'\n</script>',1)
+            p.write_text(s,encoding='utf-8')
+          required=[marker,'BUSINESS_SERVICES','business-registration','tax-registration','nassit-setup','licensing-support','business-consultancy','DVL provides registration, documentation and process support']
+          missing=[x for x in required if x not in s]
+          if missing: raise RuntimeError('Missing Business Compliance flow markers: '+', '.join(missing))
+      - name: Commit implementation
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add index.html
+          git commit -m 'Build exact Business Compliance service journey' || exit 0
+          git push origin business-compliance-service-flow
