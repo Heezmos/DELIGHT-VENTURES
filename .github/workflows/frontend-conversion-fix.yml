@@ -19,7 +19,7 @@ jobs:
           fetch-depth: 0
 
       - name: Apply conversion fix
-        run: python scripts/fix_frontend_conversion.py
+        run: python scripts/fix_frontend_conversion_v2.py
 
       - name: Validate generated frontend
         shell: bash
@@ -30,6 +30,7 @@ jobs:
           grep -q 'id="f-organization"' index.html
           grep -q 'id="f-phone"' index.html
           grep -q 'id="f-contact-method"' index.html
+          grep -q 'preferred_contact_method:preferredContactMethod' index.html
           python - <<'PY'
           from pathlib import Path
           import re
@@ -44,7 +45,7 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          rm -f scripts/fix_frontend_conversion.py .github/workflows/frontend-conversion-fix.yml
+          rm -f scripts/fix_frontend_conversion.py scripts/fix_frontend_conversion_v2.py .github/workflows/frontend-conversion-fix.yml
           rmdir scripts 2>/dev/null || true
           rmdir .github/workflows 2>/dev/null || true
           rmdir .github 2>/dev/null || true
