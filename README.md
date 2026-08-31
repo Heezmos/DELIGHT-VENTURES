@@ -22,21 +22,26 @@ Official repository for the Delight Ventures public website and supporting websi
 ### Website backend
 Supabase project: **Delight Ventures Platform**
 
-Project ref: `ialobcshxbesmncngixx`
-
 The website backend includes:
 - `contact_messages`
 - `contact_replies`
 - `website_leads`
+- `lead_activity`
 - `subscribers`
 - `website_settings`
 - `contact_submission_limits`
-- automatic lead creation
+- automatic lead creation from website enquiries
 - enquiry reference numbers
 - rate limiting and honeypot protection
 - `contact-message` Edge Function
-- `reply-contact-message` Edge Function
 - Resend transactional-email integration (requires production secrets for real email delivery)
+
+### Client conversion pipeline
+The operational lead pipeline supports:
+
+`New → Qualified → Contacted → Consultation → Quotation → Approved → In Delivery → Payment Pending → Completed → Follow-up`
+
+`Converted` and `Lost` remain available as commercial outcome states. Lead records can also carry quotation details, assignment, follow-up scheduling and key delivery timestamps. Status changes are recorded automatically in `lead_activity`.
 
 ## Repository structure
 
@@ -44,20 +49,20 @@ The website backend includes:
 .
 ├── index.html                 # current production public website
 ├── dvl-rebranded.html         # legacy/reference website file
+├── assets/
+│   └── dvl-phase3-conversion.js
 ├── docs/
 ├── supabase/
 │   ├── config.toml
 │   ├── functions/
-│   │   ├── contact-message/
-│   │   └── reply-contact-message/
 │   └── migrations/
 ├── .env.example
 └── vercel.json
 ```
 
-## Required production secrets
+## Environment configuration
 
-Set these in Supabase Edge Function Secrets — never commit their real values to GitHub:
+The website backend uses these server-side Supabase Edge Function secrets:
 
 ```text
 RESEND_API_KEY=
@@ -72,7 +77,7 @@ The repository only contains example/non-secret values. Confirm the real inbox a
 
 The public website is static and can be deployed from `main` to Vercel. GitHub Pages is also configured from `main` and provides a deployment of the public site.
 
-Production changes should be made against `main` through a short-lived feature branch and should not leave temporary transformation workflows in the production branch.
+Production changes should be made carefully against `main` and should not leave temporary transformation workflows in the production branch.
 
 ## Delight Hub
 
