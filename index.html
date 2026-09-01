@@ -111,10 +111,9 @@ h2.sec-title{font-family:'EB Garamond',serif;
 /* ABOUT */
 #about{background:var(--cream);}
 .about-grid{display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:center;margin-top:64px;}
-.about-vis{border-radius:24px;overflow:hidden;background:var(--dark2);
-  position:relative;padding:24px;aspect-ratio:1;}
-.about-vis img{position:absolute;inset:24px;width:calc(100% - 48px);height:calc(100% - 48px);
-  display:block;object-fit:cover;object-position:center;border-radius:12px;}
+.about-vis{border-radius:24px;overflow:hidden;background:transparent;}
+.about-vis img{display:block;width:100%;height:auto;aspect-ratio:1;object-fit:cover;
+  object-position:center;border-radius:24px;}
 .about-text p{font-size:16px;line-height:1.85;color:var(--muted);margin-bottom:20px;}
 .about-text strong{color:var(--dark);}
 .mv-row{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:28px 0;}
@@ -364,7 +363,7 @@ footer{background:var(--dark);border-top:1px solid rgba(192,144,79,0.1);padding:
   </div>
   <div class="about-grid">
     <div class="about-vis reveal">
-      <img src="assets/dvl-business-collaboration.png" alt="Sierra Leonean business professionals collaborating on a digital growth plan in Freetown" loading="lazy" decoding="async"/>
+      <img src="assets/dvl-business-collaboration.webp" width="900" height="900" alt="Sierra Leonean business professionals collaborating on a digital growth plan in Freetown" loading="lazy" decoding="async"/>
     </div>
     <div class="about-text reveal d1">
       <p>Delight Ventures Limited is a business and digital solutions company committed to helping entrepreneurs, startups, SMEs, and organizations <strong>establish, transform, and grow</strong> through innovative technology, business consultancy, and creative media.</p>
