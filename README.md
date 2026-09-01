@@ -1,54 +1,68 @@
 # Delight Ventures Limited
 
-Official repository for the Delight Ventures public website and the private Delight Hub platform.
+Official repository for the Delight Ventures public website and supporting website backend.
+
+**Positioning:** Helping Businesses Launch, Digitize & Grow.
 
 ## Current production scope
 
 ### Public website
 - Premium Delight Ventures website (`index.html`)
-- BUILD, GROW and POWER capability pillars
+- Three current service divisions:
+  - Business & Compliance Services
+  - Digital Solutions & Systems
+  - Creative Media Services
+- Service-level exploration and enquiry prefilling for the exact services offered by DVL
 - About, process, case studies, insights, sectors and contact sections
 - Responsive desktop/tablet/mobile layout
-- Live contact form connected to Supabase Edge Functions
+- Live contact form connected to the Supabase `contact-message` Edge Function
+
+`index.html` is the production source of truth for the public website. `dvl-rebranded.html` is retained as a legacy design/reference file and should not be treated as the current production page.
 
 ### Website backend
 Supabase project: **Delight Ventures Platform**
-
-Project ref: `ialobcshxbesmncngixx`
 
 The website backend includes:
 - `contact_messages`
 - `contact_replies`
 - `website_leads`
+- `lead_activity`
 - `subscribers`
 - `website_settings`
 - `contact_submission_limits`
-- automatic lead creation
+- automatic lead creation from website enquiries
 - enquiry reference numbers
 - rate limiting and honeypot protection
 - `contact-message` Edge Function
-- Resend transactional-email integration (requires secrets before real email delivery)
+- Resend transactional-email integration (requires production secrets for real email delivery)
+
+### Client conversion pipeline
+The operational lead pipeline supports:
+
+`New → Qualified → Contacted → Consultation → Quotation → Approved → In Delivery → Payment Pending → Completed → Follow-up`
+
+`Converted` and `Lost` remain available as commercial outcome states. Lead records can also carry quotation details, assignment, follow-up scheduling and key delivery timestamps. Status changes are recorded automatically in `lead_activity`.
 
 ## Repository structure
 
 ```text
 .
-├── index.html
-├── dvl-rebranded.html
+├── index.html                 # current production public website
+├── dvl-rebranded.html         # legacy/reference website file
+├── assets/
+│   └── dvl-phase3-conversion.js
 ├── docs/
 ├── supabase/
 │   ├── config.toml
 │   ├── functions/
-│   │   ├── contact-message/
-│   │   └── reply-contact-message/
 │   └── migrations/
 ├── .env.example
 └── vercel.json
 ```
 
-## Required production secrets
+## Environment configuration
 
-Set these in Supabase Edge Function Secrets — never commit their real values to GitHub:
+The website backend uses these server-side Supabase Edge Function secrets:
 
 ```text
 RESEND_API_KEY=
@@ -57,19 +71,14 @@ DVL_FROM_EMAIL=
 CONTACT_RATE_SALT=
 ```
 
-Recommended values after the Delight Ventures domain is ready:
-
-```text
-DVL_INBOX_EMAIL=info@delightventures.com
-DVL_FROM_EMAIL=Delight Ventures <noreply@delightventures.com>
-```
+The repository only contains example/non-secret values. Confirm the real inbox and sender identities in Supabase before production email delivery is relied upon.
 
 ## Deployment
 
-The website is configured as a static Vercel deployment. Connect this repository to Vercel and deploy from the `main` branch.
+The public website is static and can be deployed from `main` to Vercel. GitHub Pages is also configured from `main` and provides a deployment of the public site.
 
-A Vercel-hosted address can be used first (for example `delight-ventures.vercel.app`), then a custom Delight Ventures domain can be connected later.
+Production changes should be made carefully against `main` and should not leave temporary transformation workflows in the production branch.
 
 ## Delight Hub
 
-Delight Hub is a separate **private internal operating system**. It is not advertised or exposed on the public website. Its architecture and planned modules are documented under `docs/DELIGHT-HUB.md`.
+Delight Hub is a separate private internal operating-system concept. It must not be advertised or exposed as part of the public website unless DVL explicitly decides to launch it publicly. Its architecture notes are documented under `docs/DELIGHT-HUB.md`.

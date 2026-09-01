@@ -283,6 +283,17 @@ footer{background:var(--dark);border-top:1px solid rgba(192,144,79,0.1);padding:
   .form-row{grid-template-columns:1fr;}
   .mv-row{grid-template-columns:1fr;}
 }
+/* PHASE 2 SERVICE EXPERIENCE */
+.service-actions{margin-top:26px;display:flex;gap:10px;flex-wrap:wrap}.service-detail-btn{border:1px solid rgba(192,144,79,.38);background:transparent;color:var(--gold-light);padding:11px 16px;border-radius:6px;font:inherit;cursor:pointer}.service-request-btn{display:inline-flex;align-items:center;text-decoration:none;background:var(--gold);color:var(--dark);padding:11px 16px;border-radius:6px;font-weight:700;font-size:13px}.service-modal{position:fixed;inset:0;z-index:1000;background:rgba(20,13,8,.78);backdrop-filter:blur(8px);display:none;align-items:center;justify-content:center;padding:24px}.service-modal.open{display:flex}.service-modal-card{width:min(760px,100%);max-height:88vh;overflow:auto;background:var(--cream);border:1px solid rgba(192,144,79,.35);border-radius:18px;padding:38px;position:relative}.service-modal-close{position:absolute;right:20px;top:18px;border:0;background:transparent;font-size:28px;cursor:pointer}.service-modal-kicker{text-transform:uppercase;letter-spacing:2px;color:var(--gold);font-size:11px;font-weight:700}.service-modal h3{font-family:'EB Garamond',serif;font-size:34px;margin:8px 42px 10px 0}.service-modal p{color:var(--muted);line-height:1.7}.service-modal ul{margin:22px 0;padding:0;list-style:none;display:grid;grid-template-columns:1fr 1fr;gap:10px}.service-modal li{padding:11px 13px;background:#fff;border:1px solid var(--border);border-radius:8px;font-size:13px}.service-modal li:before{content:'✓';color:var(--gold);font-weight:800;margin-right:9px}.service-modal-footer{display:flex;gap:12px;align-items:center;margin-top:26px;flex-wrap:wrap}.service-modal-note{font-size:12px!important;margin:0!important;flex:1;min-width:230px}@media(max-width:600px){.service-modal-card{padding:28px 20px}.service-modal ul{grid-template-columns:1fr}.service-modal h3{font-size:28px}}
+/* BUSINESS COMPLIANCE SERVICE FLOW */
+.business-service-list{display:grid!important;grid-template-columns:1fr!important;gap:10px!important}.business-service-list li{padding:0!important;background:transparent!important;border:0!important}.business-service-list li:before{display:none!important}.subservice-btn{width:100%;text-align:left;background:#fff;border:1px solid var(--border);border-radius:10px;padding:14px 16px;cursor:pointer;font:inherit;color:var(--dark);display:flex;justify-content:space-between;gap:14px;align-items:center;transition:.2s}.subservice-btn:hover{border-color:rgba(192,144,79,.55);transform:translateY(-1px)}.subservice-btn strong{font-family:'EB Garamond',serif;font-size:16px}.subservice-btn span{color:var(--gold);font-weight:700}.service-back{border:0;background:transparent;color:var(--gold);font:inherit;font-weight:700;cursor:pointer;padding:0 0 12px}.compliance-note{background:rgba(192,144,79,.08);border:1px solid rgba(192,144,79,.24);border-radius:10px;padding:12px 14px;margin-top:18px;font-size:12px!important;line-height:1.55!important}.exact-service-label{font-size:12px;color:var(--gold);font-weight:700;margin:0 0 6px!important;text-transform:uppercase;letter-spacing:1.2px}
+
+/* DIGITAL SOLUTIONS SERVICE FLOW */
+.digital-service-list{display:grid!important;grid-template-columns:1fr!important;gap:10px!important}.digital-service-list li{padding:0!important;background:transparent!important;border:0!important}.digital-service-list li:before{display:none!important}.digital-subservice-btn{width:100%;text-align:left;background:#fff;border:1px solid var(--border);border-radius:10px;padding:14px 16px;cursor:pointer;font:inherit;color:var(--dark);display:flex;justify-content:space-between;gap:14px;align-items:center;transition:.2s}.digital-subservice-btn:hover{border-color:rgba(192,144,79,.55);transform:translateY(-1px)}.digital-subservice-btn strong{font-family:'EB Garamond',serif;font-size:16px}.digital-subservice-btn span{color:var(--gold);font-weight:700}.digital-service-note{background:rgba(192,144,79,.08);border:1px solid rgba(192,144,79,.24);border-radius:10px;padding:12px 14px;margin-top:18px;font-size:12px!important;line-height:1.55!important}
+
+/* CREATIVE MEDIA SERVICE FLOW */
+.creative-service-list{display:grid!important;grid-template-columns:1fr!important;gap:10px!important}.creative-service-list li{padding:0!important;background:transparent!important;border:0!important}.creative-service-list li:before{display:none!important}.creative-subservice-btn{width:100%;text-align:left;background:#fff;border:1px solid var(--border);border-radius:10px;padding:14px 16px;cursor:pointer;font:inherit;color:var(--dark);display:flex;justify-content:space-between;gap:14px;align-items:center;transition:.2s}.creative-subservice-btn:hover{border-color:rgba(192,144,79,.55);transform:translateY(-1px)}.creative-subservice-btn strong{font-family:'EB Garamond',serif;font-size:16px}.creative-subservice-btn span{color:var(--gold);font-weight:700}.creative-service-note{background:rgba(192,144,79,.08);border:1px solid rgba(192,144,79,.24);border-radius:10px;padding:12px 14px;margin-top:18px;font-size:12px!important;line-height:1.55!important}
+
 </style>
 </head>
 <body>
@@ -572,25 +583,29 @@ footer{background:var(--dark);border-top:1px solid rgba(192,144,79,0.1);padding:
           <div class="fg"><label>Full Name</label><input id="f-name" type="text" placeholder="Your full name" required/></div>
           <div class="fg"><label>Email</label><input id="f-email" type="email" placeholder="your@email.com" required/></div>
         </div>
-        <div class="fg">
-          <label>Service of Interest</label>
-          <select id="f-service">
+        <div class="form-row">
+          <div class="fg"><label>Organization / Business <span style="font-weight:400;opacity:.72">(optional)</span></label><input id="f-organization" type="text" maxlength="180" autocomplete="organization" placeholder="Business or organization name"/></div>
+          <div class="fg"><label>Phone / WhatsApp <span style="font-weight:400;opacity:.72">(optional)</span></label><input id="f-phone" type="tel" maxlength="80" autocomplete="tel" inputmode="tel" placeholder="e.g. +232 …"/></div>
+        </div>
+        <div class="form-row">
+          <div class="fg"><label>Service of Interest</label><select id="f-service">
             <option value="">Choose a service…</option>
             <option>Business &amp; Compliance Services</option>
             <option>Digital Solutions &amp; Systems</option>
             <option>Creative Media Services</option>
             <option>General Inquiry</option>
-          </select>
+          </select></div>
+          <div class="fg"><label>Preferred Contact Method</label><select id="f-contact-method"><option value="email">Email</option><option value="phone">Phone</option><option value="whatsapp">WhatsApp</option></select></div>
         </div>
-        <div class="fg"><label>Message</label><textarea id="f-msg" placeholder="Tell us about your business needs…"></textarea></div>
+        <div class="fg"><label>Message</label><textarea id="f-msg" minlength="10" maxlength="5000" placeholder="Tell us about your business needs…" required></textarea></div>
         <div class="fg" style="display:none" aria-hidden="true"><label>Company Website</label><input id="f-company-website" type="text" tabindex="-1" autocomplete="off"/></div>
         <div class="fg"><label style="display:flex;align-items:flex-start;gap:10px;font-weight:400;line-height:1.5"><input id="f-consent" type="checkbox" required style="width:auto;margin-top:4px"/> I agree that Delight Ventures Limited may use the information I provide to respond to this enquiry.</label></div>
         <button type="submit" class="submit-btn" id="submitBtn">
           Send Message
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="width:16px;height:16px;"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
         </button>
-        <div id="fs-ok">✓ Message sent! We'll be in touch with you shortly.</div>
-        <div id="fs-err">Something went wrong. Please try again or call us directly.</div>
+        <div id="fs-ok" role="status" aria-live="polite">✓ Message sent! We'll be in touch with you shortly.</div>
+        <div id="fs-err" role="alert" aria-live="assertive">Something went wrong. Please try again or call us directly.</div>
       </form>
     </div>
   </div>
@@ -656,6 +671,7 @@ footer{background:var(--dark);border-top:1px solid rgba(192,144,79,0.1);padding:
   </div>
 </footer>
 
+<div class="service-modal" id="serviceModal" aria-hidden="true" role="dialog" aria-modal="true" aria-labelledby="serviceModalTitle"><div class="service-modal-card"><button class="service-modal-close" type="button" aria-label="Close service details">×</button><div class="service-modal-kicker" id="serviceModalKicker"></div><h3 id="serviceModalTitle"></h3><p id="serviceModalIntro"></p><ul id="serviceModalList"></ul><div class="service-modal-footer"><a href="#contact" class="service-request-btn" id="modalRequestBtn">Request This Service →</a><p class="service-modal-note">Tell us what you need. DVL will review your request and follow up with the appropriate next steps.</p></div></div></div>
 <script>
 const API_URL = "https://ialobcshxbesmncngixx.supabase.co/functions/v1/contact-message";
 
@@ -707,52 +723,164 @@ window.addEventListener('scroll',()=>{
 });
 
 // Contact form
-async function handleForm(e) {
-  e.preventDefault();
-  const btn=document.getElementById('submitBtn');
-  const ok=document.getElementById('fs-ok');
-  const err=document.getElementById('fs-err');
-  const name=document.getElementById('f-name').value.trim();
-  const email=document.getElementById('f-email').value.trim();
-  const service=document.getElementById('f-service').value||'General Inquiry';
-  const message=document.getElementById('f-msg').value.trim();
-  const consent=document.getElementById('f-consent')?.checked===true;
-  const honeypot=document.getElementById('f-company-website')?.value||'';
-  if(!name||!email||!message){
-    err.textContent='Please fill in your name, email, and message.';
-    err.style.display='block';
-    setTimeout(()=>err.style.display='none',4000);return;
-  }
-  if(!consent){
-    err.textContent='Please confirm that we may use your information to respond to this enquiry.';
-    err.style.display='block';
-    setTimeout(()=>err.style.display='none',4000);return;
-  }
-  btn.disabled=true;btn.textContent='Sending…';
-  ok.style.display='none';err.style.display='none';
-  try{
-    const res=await fetch(API_URL,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({
-      full_name:name,
-      email,
-      service_interest:service,
-      preferred_contact_method:'email',
-      message,
-      consent,
-      company_website:honeypot
-    })});
-    const data=await res.json().catch(()=>({}));
-    if(!res.ok) throw new Error(data.error||'Unable to send your message.');
-    const ref=data.reference_no?` Reference: ${data.reference_no}.`:'';
-    ok.textContent='Thank you. Your enquiry has been received.'+ref;
-    ok.style.display='block';
-    e.target.reset();
-  }catch(error){
-    err.textContent=error.message||'We could not send your message right now. Please try again shortly.';
-    err.style.display='block';
-  }finally{
-    btn.disabled=false;btn.textContent='Send Message';
-  }
+function showDVLFormError(message){const err=document.getElementById('fs-err');if(!err)return;err.textContent=message;err.style.display='block';window.setTimeout(()=>{err.style.display='none'},5000)}
+async function handleForm(e){
+ e.preventDefault();
+ const form=e.currentTarget,btn=document.getElementById('submitBtn'),ok=document.getElementById('fs-ok'),err=document.getElementById('fs-err');
+ const name=document.getElementById('f-name').value.trim(),email=document.getElementById('f-email').value.trim();
+ const organization=document.getElementById('f-organization')?.value.trim()||'',phone=document.getElementById('f-phone')?.value.trim()||'';
+ const service=document.getElementById('f-service').value||'General Inquiry',preferredContactMethod=document.getElementById('f-contact-method')?.value||'email';
+ const message=document.getElementById('f-msg').value.trim(),consent=document.getElementById('f-consent')?.checked===true,honeypot=document.getElementById('f-company-website')?.value||'';
+ if(name.length<2){showDVLFormError('Please enter your full name.');return}
+ if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){showDVLFormError('Please enter a valid email address.');return}
+ if(message.length<10){showDVLFormError('Please enter a message of at least 10 characters.');return}
+ if((preferredContactMethod==='phone'||preferredContactMethod==='whatsapp')&&!phone){showDVLFormError('Please enter your phone number when choosing Phone or WhatsApp as your preferred contact method.');return}
+ if(!consent){showDVLFormError('Please confirm that we may use your information to respond to this enquiry.');return}
+ btn.disabled=true;btn.textContent='Sending…';ok.style.display='none';err.style.display='none';
+ const controller=new AbortController(),timeout=window.setTimeout(()=>controller.abort(),15000);
+ try{
+  const res=await fetch(API_URL,{method:'POST',headers:{'Content-Type':'application/json'},signal:controller.signal,body:JSON.stringify({full_name:name,email,organization:organization||null,phone:phone||null,service_interest:service,preferred_contact_method:preferredContactMethod,message,consent,company_website:honeypot})});
+  const data=await res.json().catch(()=>({}));if(!res.ok)throw new Error(data.error||'Unable to send your message.');
+  const ref=data.reference_no?` Your reference is ${data.reference_no}.`:'';ok.textContent='Thank you. Your enquiry has been received.'+ref+' Our team will review it and contact you through your preferred method.';ok.style.display='block';form.reset();
+  const msg=document.getElementById('f-msg');if(msg)delete msg.dataset.dvlPrefill;
+ }catch(error){showDVLFormError(error?.name==='AbortError'?'The request took too long. Please check your connection and try again.':(error?.message||'We could not send your message right now. Please try again shortly.'))}
+ finally{window.clearTimeout(timeout);btn.disabled=false;btn.textContent='Send Message'}
 }
+
+const DVL_SERVICES={business:{kicker:'Launch',title:'Business & Compliance Services',intro:'Practical administrative and advisory support to help entrepreneurs and organizations establish and maintain stronger business foundations.',items:['Business Registration','Tax Registration','NASSIT Setup','Business Licensing Support','Business Consultancy']},digital:{kicker:'Digitize',title:'Digital Solutions & Systems',intro:'Practical digital products and operational systems designed around the needs of startups, SMEs and organizations.',items:['Corporate Websites','E-Commerce Platforms','ERP Systems','CRM Systems','HRM Systems','Payment Gateway Integration','Inventory Management Systems','WhatsApp Business Integration']},creative:{kicker:'Grow',title:'Creative Media Services',intro:'Professional visual content that helps businesses present their brands, products, people and activities with greater credibility and market visibility.',items:['Corporate Photography & Videography','Event Coverage','Product Photography & Videography','Promotional Content','Commercial Visuals']}};
+function dvlKey(title){if(title.includes('Business & Compliance'))return'business';if(title.includes('Digital Solutions'))return'digital';if(title.includes('Creative Media'))return'creative';return null}
+const serviceModal=document.getElementById('serviceModal');
+function resetDVLModalDecorations(){const list=document.getElementById('serviceModalList');if(list)list.className='';['businessComplianceNote','digitalServiceNote','creativeServiceNote'].forEach(id=>document.getElementById(id)?.remove())}
+function setDVLMessagePrefill(value){const msg=document.getElementById('f-msg');if(!msg)return;const previous=msg.dataset.dvlPrefill||'',current=msg.value.trim();if(!current||current===previous.trim()){msg.value=value;msg.dataset.dvlPrefill=value}}
+document.getElementById('f-msg')?.addEventListener('input',e=>{const msg=e.currentTarget;if(msg.dataset.dvlPrefill&&msg.value!==msg.dataset.dvlPrefill)delete msg.dataset.dvlPrefill});
+function closeDVLService(){serviceModal?.classList.remove('open');serviceModal?.setAttribute('aria-hidden','true');document.body.style.overflow=''}
+function prefillDVLRequest(key){const d=DVL_SERVICES[key],form=document.querySelector('#contact form, form.contact-form, #contactForm');if(!d||!form)return;const select=document.getElementById('f-service');if(select){const match=[...select.options].find(o=>o.textContent.toLowerCase().includes(d.title.split(' Services')[0].toLowerCase())||o.value.toLowerCase().includes(key));if(match)select.value=match.value}setDVLMessagePrefill('I am interested in '+d.title+'. Please contact me to discuss my requirements.')}
+function openDVLService(key){const d=DVL_SERVICES[key];if(!d||!serviceModal)return;document.getElementById('serviceModalKicker').textContent=d.kicker;document.getElementById('serviceModalTitle').textContent=d.title;document.getElementById('serviceModalIntro').textContent=d.intro;document.getElementById('serviceModalList').innerHTML=d.items.map(x=>'<li>'+x+'</li>').join('');document.getElementById('modalRequestBtn').dataset.requestDivision=key;serviceModal.classList.add('open');serviceModal.setAttribute('aria-hidden','false');document.body.style.overflow='hidden'}
+document.querySelectorAll('.pillar').forEach(card=>{const h=card.querySelector('h3');const key=h?dvlKey(h.textContent):null;if(!key||card.querySelector('.service-actions'))return;const actions=document.createElement('div');actions.className='service-actions';actions.innerHTML='<button type="button" class="service-detail-btn">Explore Services</button><a href="#contact" class="service-request-btn">Request Service →</a>';actions.querySelector('button').addEventListener('click',()=>openDVLService(key));actions.querySelector('a').addEventListener('click',()=>prefillDVLRequest(key));card.appendChild(actions)});
+document.querySelector('.service-modal-close')?.addEventListener('click',closeDVLService);serviceModal?.addEventListener('click',e=>{if(e.target===serviceModal)closeDVLService()});document.addEventListener('keydown',e=>{if(e.key==='Escape')closeDVLService()});
+
+// Business & Compliance exact-service flow
+const BUSINESS_SERVICES={
+ 'business-registration':{title:'Business Registration',intro:'Administrative support to help entrepreneurs and organizations prepare and coordinate the business registration process.',includes:['Initial registration consultation','Business structure guidance','Registration-document preparation','Application support and process coordination','Follow-up during the registration process','Post-registration guidance']},
+ 'tax-registration':{title:'Tax Registration',intro:'Practical support with preparing and coordinating the documentation needed for business tax registration.',includes:['Tax-registration guidance','Required-document preparation','Application assistance','Tax identification setup support','Application follow-up','Basic compliance orientation']},
+ 'nassit-setup':{title:'NASSIT Setup',intro:'Administrative support for employers preparing to complete NASSIT registration and establish their employee-registration process.',includes:['Employer registration support','Required-document preparation','Employee-registration assistance','Administrative setup guidance','Contribution-process orientation','Registration follow-up']},
+ 'licensing-support':{title:'Business Licensing Support',intro:'Guidance and administrative support for businesses identifying and preparing for relevant licensing requirements.',includes:['Licensing requirement assessment','Documentation checklist','Application preparation support','Process guidance','Application follow-up','Renewal support where applicable']},
+ 'business-consultancy':{title:'Business Consultancy',intro:'Practical advisory support for entrepreneurs and organizations strengthening their business model, operations and growth plans.',includes:['Startup and business advisory','Business-model development','Business planning','Basic market research','Process and operational development','Growth and digitalization recommendations','Business documentation and technology recommendations']}
+};
+const baseOpenDVLService=openDVLService;
+function renderBusinessServiceMenu(){
+ resetDVLModalDecorations();
+ const d=DVL_SERVICES.business;if(!serviceModal)return;
+ document.getElementById('serviceModalKicker').textContent='Launch';
+ document.getElementById('serviceModalTitle').textContent=d.title;
+ document.getElementById('serviceModalIntro').textContent='Choose the exact service you need. You can review what is included before sending your request.';
+ const list=document.getElementById('serviceModalList');list.className='business-service-list';
+ list.innerHTML=Object.entries(BUSINESS_SERVICES).map(([key,x])=>'<li><button type="button" class="subservice-btn" data-business-service="'+key+'"><strong>'+x.title+'</strong><span>View →</span></button></li>').join('');
+ list.querySelectorAll('[data-business-service]').forEach(btn=>btn.addEventListener('click',()=>openBusinessService(btn.dataset.businessService)));
+ const request=document.getElementById('modalRequestBtn');request.dataset.requestDivision='business';request.textContent='Request Business & Compliance Support →';
+ const note=document.createElement('p');note.id='businessComplianceNote';note.className='compliance-note';note.textContent='DVL provides registration, documentation and process support. Registrations, tax identifiers, NASSIT registrations and licences are issued by the relevant authorities.';document.querySelector('.service-modal-footer').before(note);
+ serviceModal.classList.add('open');serviceModal.setAttribute('aria-hidden','false');document.body.style.overflow='hidden';
+}
+function openBusinessService(key){
+ const x=BUSINESS_SERVICES[key];if(!x||!serviceModal)return;
+ document.getElementById('serviceModalKicker').innerHTML='<button type="button" class="service-back" id="businessServiceBack">← Back to Business & Compliance</button><div class="exact-service-label">Business & Compliance Service</div>';
+ document.getElementById('businessServiceBack').addEventListener('click',renderBusinessServiceMenu);
+ document.getElementById('serviceModalTitle').textContent=x.title;
+ document.getElementById('serviceModalIntro').textContent=x.intro;
+ const list=document.getElementById('serviceModalList');list.className='';list.innerHTML=x.includes.map(i=>'<li>'+i+'</li>').join('');
+ const request=document.getElementById('modalRequestBtn');request.dataset.requestDivision=key;request.textContent='Request '+x.title+' →';
+ let note=document.getElementById('businessComplianceNote');if(!note){note=document.createElement('p');note.id='businessComplianceNote';note.className='compliance-note';document.querySelector('.service-modal-footer').before(note)}note.textContent='DVL provides administrative, documentation and process support. The relevant authority is responsible for issuing registrations, identifiers or licences.';
+}
+openDVLService=function(key){if(key==='business')return renderBusinessServiceMenu();return baseOpenDVLService(key)};
+function ensureExactServiceOptions(){const select=document.getElementById('f-service');if(!select)return;Object.values(BUSINESS_SERVICES).forEach(x=>{if([...select.options].some(o=>o.value===x.title))return;const o=document.createElement('option');o.value=x.title;o.textContent='Business & Compliance — '+x.title;const general=[...select.options].find(o=>o.textContent.includes('Digital Solutions'));select.insertBefore(o,general||null)})}
+ensureExactServiceOptions();
+
+
+// Digital Solutions & Systems exact-service flow
+const DIGITAL_SERVICES={
+ 'corporate-websites':{title:'Corporate Website Development',intro:'Professional responsive websites designed to build credibility, generate enquiries and support day-to-day business communication.',includes:['Corporate and SME websites','Startup and NGO websites','Hotel and service-business websites','Landing pages and portfolios','Responsive mobile design','Contact and enquiry forms','WhatsApp integration','Basic SEO and analytics setup']},
+ 'ecommerce-platforms':{title:'E-Commerce Platforms',intro:'Online storefronts that help businesses present products, accept orders and manage the core digital sales journey.',includes:['Online storefront setup','Product catalogue management','Shopping cart and checkout','Customer accounts','Order management','Payment integration','Inventory connection','WhatsApp ordering support','Responsive storefront and reporting']},
+ 'erp-systems':{title:'ERP Systems',intro:'Integrated business systems that bring core operations into one practical management environment.',includes:['Finance and operational modules','Procurement workflows','Inventory management','HR administration','Sales and customer operations','Management reporting','Role-based administration','Scalable module design for SMEs']},
+ 'crm-systems':{title:'CRM Systems',intro:'Customer relationship systems that help businesses organize leads, enquiries, follow-ups and sales activity.',includes:['Customer database','Lead management','Sales pipeline','Interaction history','Follow-up reminders','Enquiry and support tracking','Sales reporting','Management dashboards']},
+ 'hrm-systems':{title:'HRM Systems',intro:'Digital HR systems that help organizations manage employee records, movements, leave and performance information.',includes:['Employee records','Attendance management','Leave management','Employee movements','Training records','Performance tracking','Promotion history','Payroll-related information','HR reports and role-based access']},
+ 'payment-integration':{title:'Payment Gateway Integration',intro:'Secure integration of licensed payment providers into websites and digital business systems.',includes:['Online payment integration','Checkout implementation','Transaction records','Payment confirmation','Digital receipts','Payment-status tracking','Order and ecommerce integration']},
+ 'inventory-systems':{title:'Inventory Management Systems',intro:'Stock-management tools that help businesses monitor products, suppliers, stock movements and low-stock risks.',includes:['Product and SKU management','Stock levels and movements','Supplier records','Sales-linked stock updates','Low-stock alerts','Inventory reports','Branch or location support','Management dashboards']},
+ 'whatsapp-integration':{title:'WhatsApp Business Integration',intro:'Practical WhatsApp connections that make it easier for customers to enquire, order and communicate with a business.',includes:['Website-to-WhatsApp links','Product and service enquiries','WhatsApp ordering flows','Lead capture','Support links','Automated responses where appropriate','Customer notifications','Workflow integrations']}
+};
+const baseDigitalOpenDVLService=openDVLService;
+function renderDigitalServiceMenu(){
+ resetDVLModalDecorations();
+ const d=DVL_SERVICES.digital;if(!serviceModal)return;
+ document.getElementById('serviceModalKicker').textContent='Digitize';
+ document.getElementById('serviceModalTitle').textContent=d.title;
+ document.getElementById('serviceModalIntro').textContent='Choose the exact digital solution your business needs. Review the scope before sending your request.';
+ const list=document.getElementById('serviceModalList');list.className='digital-service-list';
+ list.innerHTML=Object.entries(DIGITAL_SERVICES).map(([key,x])=>'<li><button type="button" class="digital-subservice-btn" data-digital-service="'+key+'"><strong>'+x.title+'</strong><span>View →</span></button></li>').join('');
+ list.querySelectorAll('[data-digital-service]').forEach(btn=>btn.addEventListener('click',()=>openDigitalService(btn.dataset.digitalService)));
+ const request=document.getElementById('modalRequestBtn');request.dataset.requestDivision='digital';request.textContent='Request Digital Solutions Support →';
+ const note=document.createElement('p');note.id='digitalServiceNote';note.className='digital-service-note';note.textContent='DVL scopes each digital solution around the client’s actual operational needs. Third-party platform, hosting, domain, payment-provider or software fees are quoted separately where applicable.';document.querySelector('.service-modal-footer').before(note);
+ serviceModal.classList.add('open');serviceModal.setAttribute('aria-hidden','false');document.body.style.overflow='hidden';
+}
+function openDigitalService(key){
+ const x=DIGITAL_SERVICES[key];if(!x||!serviceModal)return;
+ document.getElementById('serviceModalKicker').innerHTML='<button type="button" class="service-back" id="digitalServiceBack">← Back to Digital Solutions</button><div class="exact-service-label">Digital Solutions & Systems</div>';
+ document.getElementById('digitalServiceBack').addEventListener('click',renderDigitalServiceMenu);
+ document.getElementById('serviceModalTitle').textContent=x.title;
+ document.getElementById('serviceModalIntro').textContent=x.intro;
+ const list=document.getElementById('serviceModalList');list.className='';list.innerHTML=x.includes.map(i=>'<li>'+i+'</li>').join('');
+ const request=document.getElementById('modalRequestBtn');request.dataset.requestDivision=key;request.textContent='Request '+x.title+' →';
+ let note=document.getElementById('digitalServiceNote');if(!note){note=document.createElement('p');note.id='digitalServiceNote';note.className='digital-service-note';document.querySelector('.service-modal-footer').before(note)}note.textContent='Final scope, timeline and professional service fee are confirmed after DVL reviews your requirements. Any third-party fees are identified separately where applicable.';
+}
+openDVLService=function(key){if(key==='digital')return renderDigitalServiceMenu();return baseDigitalOpenDVLService(key)};
+function ensureDigitalServiceOptions(){const select=document.getElementById('f-service');if(!select)return;Object.values(DIGITAL_SERVICES).forEach(x=>{if([...select.options].some(o=>o.value===x.title))return;const o=document.createElement('option');o.value=x.title;o.textContent='Digital Solutions — '+x.title;const creative=[...select.options].find(o=>o.textContent.includes('Creative Media'));select.insertBefore(o,creative||null)})}
+ensureDigitalServiceOptions();
+
+
+// Creative Media exact-service flow
+const CREATIVE_SERVICES={
+ 'corporate-media':{title:'Corporate Photography & Videography',intro:'Professional visual content that helps organizations present their people, workplace, leadership and activities with credibility.',includes:['Corporate portraits and headshots','Team and workplace photography','Executive and leadership visuals','Interviews and profile videos','Organizational activity coverage','Website and corporate-profile imagery']},
+ 'event-coverage':{title:'Event Coverage',intro:'Professional photography and videography for business, institutional and private events, with deliverables prepared for communication and promotion.',includes:['Corporate events and conferences','Workshops and seminars','Product and business launches','Openings and networking events','NGO and institutional programmes','Edited event photography','Highlight and recap videos']},
+ 'product-media':{title:'Product Photography & Videography',intro:'Commercial product visuals created for ecommerce, catalogues, menus, advertising and digital sales channels.',includes:['Product photography','E-commerce product images','Food and hospitality visuals','Product demonstration videos','Lifestyle product content','Catalogue-ready visual assets']},
+ 'promotional-content':{title:'Promotional Content',intro:'Campaign-ready photography and video content designed to help businesses communicate offers, stories and brand messages.',includes:['Promotional videos','Social-media content','Short-form video content','Advertising visuals','Campaign photography','Brand storytelling','Website promotional visuals']},
+ 'commercial-visuals':{title:'Commercial Visuals',intro:'Strategic visual production for brands and organizations that need stronger commercial storytelling and institutional communication.',includes:['Brand campaigns','Commercial photography','Corporate storytelling','Tourism and hospitality visuals','Marketing campaign assets','Business documentary content','Institutional visual communication']}
+};
+const baseCreativeOpenDVLService=openDVLService;
+function renderCreativeServiceMenu(){
+ resetDVLModalDecorations();
+ const d=DVL_SERVICES.creative;if(!serviceModal)return;
+ document.getElementById('serviceModalKicker').textContent='Grow';
+ document.getElementById('serviceModalTitle').textContent=d.title;
+ document.getElementById('serviceModalIntro').textContent='Choose the exact creative media service you need and review the typical deliverables before sending your request.';
+ const list=document.getElementById('serviceModalList');list.className='creative-service-list';
+ list.innerHTML=Object.entries(CREATIVE_SERVICES).map(([key,x])=>'<li><button type="button" class="creative-subservice-btn" data-creative-service="'+key+'"><strong>'+x.title+'</strong><span>View →</span></button></li>').join('');
+ list.querySelectorAll('[data-creative-service]').forEach(btn=>btn.addEventListener('click',()=>openCreativeService(btn.dataset.creativeService)));
+ const request=document.getElementById('modalRequestBtn');request.dataset.requestDivision='creative';request.textContent='Request Creative Media Support →';
+ const note=document.createElement('p');note.id='creativeServiceNote';note.className='creative-service-note';note.textContent='Creative assignments are scoped around the location, duration, production requirements and final deliverables. Travel, venue, talent, printing or other third-party production costs are identified separately where applicable.';document.querySelector('.service-modal-footer').before(note);
+ serviceModal.classList.add('open');serviceModal.setAttribute('aria-hidden','false');document.body.style.overflow='hidden';
+}
+function openCreativeService(key){
+ const x=CREATIVE_SERVICES[key];if(!x||!serviceModal)return;
+ document.getElementById('serviceModalKicker').innerHTML='<button type="button" class="service-back" id="creativeServiceBack">← Back to Creative Media</button><div class="exact-service-label">Creative Media Services</div>';
+ document.getElementById('creativeServiceBack').addEventListener('click',renderCreativeServiceMenu);
+ document.getElementById('serviceModalTitle').textContent=x.title;
+ document.getElementById('serviceModalIntro').textContent=x.intro;
+ const list=document.getElementById('serviceModalList');list.className='';list.innerHTML=x.includes.map(i=>'<li>'+i+'</li>').join('');
+ const request=document.getElementById('modalRequestBtn');request.dataset.requestDivision=key;request.textContent='Request '+x.title+' →';
+ let note=document.getElementById('creativeServiceNote');if(!note){note=document.createElement('p');note.id='creativeServiceNote';note.className='creative-service-note';document.querySelector('.service-modal-footer').before(note)}note.textContent='Final scope, schedule, deliverables and professional service fee are confirmed after DVL reviews your brief. Applicable third-party production costs are quoted separately.';
+}
+openDVLService=function(key){if(key==='creative')return renderCreativeServiceMenu();return baseCreativeOpenDVLService(key)};
+function ensureCreativeServiceOptions(){const select=document.getElementById('f-service');if(!select)return;Object.values(CREATIVE_SERVICES).forEach(x=>{if([...select.options].some(o=>o.value===x.title))return;const o=document.createElement('option');o.value=x.title;o.textContent='Creative Media — '+x.title;select.appendChild(o)})}
+ensureCreativeServiceOptions();
+
+
+// Centralized conversion CTA — one listener, one source of truth.
+function resolveDVLRequest(key){
+ const exact=BUSINESS_SERVICES[key]||DIGITAL_SERVICES[key]||CREATIVE_SERVICES[key];
+ if(exact){let detail='requirements and next steps';if(DIGITAL_SERVICES[key])detail='requirements, scope and next steps';if(CREATIVE_SERVICES[key])detail='assignment, deliverables and next steps';return {service:exact.title,message:'I am interested in '+exact.title+'. Please contact me to discuss the '+detail+'.'}}
+ const division=DVL_SERVICES[key];return division?{service:division.title,message:'I am interested in '+division.title+'. Please contact me to discuss my requirements.'}:null
+}
+document.getElementById('modalRequestBtn')?.addEventListener('click',e=>{const request=resolveDVLRequest(e.currentTarget.dataset.requestDivision);if(!request)return;const select=document.getElementById('f-service');if(select&&[...select.options].some(o=>o.value===request.service))select.value=request.service;setDVLMessagePrefill(request.message);closeDVLService()});
+
 </script>
 </body>
 </html>
