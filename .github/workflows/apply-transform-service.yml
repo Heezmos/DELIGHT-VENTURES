@@ -1,23 +1,22 @@
 name: Apply Transform Service
 on:
   push:
-    branches: [transform-data-ai-service]
+    branches:
+      - transform-data-ai-service
 permissions:
   contents: write
 jobs:
   migrate:
-    if: "!contains(github.event.head_commit.message, 'Apply TRANSFORM service model')"
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
       - name: Replace Creative Media with TRANSFORM
-        shell: python
         run: |
+          python3 <<'PY'
           from pathlib import Path
           import re
           p=Path('index.html')
           s=p.read_text()
-
           replacements={
             'We Launch. We Digitize.<br/>We <em>Grow</em> Your Business.':'We Launch. We Digitize.<br/>We <em>Transform</em> Your Business.',
             'Helping Businesses Launch · Digitize · Grow':'Helping Businesses Launch · Digitize · Transform',
@@ -33,21 +32,12 @@ jobs:
             "const creative=[...select.options].find(o=>o.textContent.includes('Creative Media'))":"const creative=[...select.options].find(o=>o.textContent.includes('TRANSFORM')||o.textContent.includes('Data, AI & Business Automation'))",
             "document.getElementById('serviceModalKicker').textContent='Grow';":"document.getElementById('serviceModalKicker').textContent='Transform';",
             "request.textContent='Request Creative Media Support →';":"request.textContent='Request Data, AI & Automation Support →';",
-            "← Back to Creative Media":"← Back to TRANSFORM",
+            '← Back to Creative Media':'← Back to TRANSFORM',
             "o.textContent='Creative Media — '+x.title":"o.textContent='TRANSFORM — '+x.title",
-            "if(CREATIVE_SERVICES[key])detail='assignment, deliverables and next steps'":"if(CREATIVE_SERVICES[key])detail='business goals, automation needs and next steps'",
-            "['businessComplianceNote','digitalServiceNote','creativeServiceNote']":"['businessComplianceNote','digitalServiceNote','creativeServiceNote']"
+            "if(CREATIVE_SERVICES[key])detail='assignment, deliverables and next steps'":"if(CREATIVE_SERVICES[key])detail='business goals, automation needs and next steps'"
           }
-          for a,b in replacements.items():
-            s=s.replace(a,b)
-
-          s=re.sub(
-            r"creative:\{kicker:'Grow',title:'TRANSFORM — Data, AI & Business Automation',intro:.*?items:\[.*?\]\}",
-            "creative:{kicker:'Transform',title:'TRANSFORM — Data, AI & Business Automation',intro:'Data, AI and automation solutions that help businesses improve decisions, automate repetitive work and modernize operations.',items:['AI Business Agents','Workflow Automation','Business Intelligence Dashboards','Data Analytics','AI-Powered Business Solutions','Digital Transformation Consultancy']}",
-            s,
-            count=1
-          )
-
+          for a,b in replacements.items(): s=s.replace(a,b)
+          s=re.sub(r"creative:\{kicker:'Grow',title:'TRANSFORM — Data, AI & Business Automation',intro:.*?items:\[.*?\]\}","creative:{kicker:'Transform',title:'TRANSFORM — Data, AI & Business Automation',intro:'Data, AI and automation solutions that help businesses improve decisions, automate repetitive work and modernize operations.',items:['AI Business Agents','Workflow Automation','Business Intelligence Dashboards','Data Analytics','AI-Powered Business Solutions','Digital Transformation Consultancy']}",s,count=1)
           new_services="""const CREATIVE_SERVICES={
  'ai-business-agents':{title:'AI Business Agents',intro:'Practical AI assistants designed around real business workflows, information and customer or staff needs.',includes:['Customer enquiry and support agents','Internal knowledge assistants','Sales and lead-support agents','Task and operations assistants','Reporting and information retrieval','Human review and escalation workflows']},
  'workflow-automation':{title:'Workflow Automation',intro:'Automation of repetitive business processes to reduce manual work, delays and operational errors.',includes:['Process mapping and automation design','Lead and enquiry automation','Notifications and approvals','Document and data workflows','Cross-system integrations','Operational monitoring and exception handling']},
@@ -57,32 +47,30 @@ jobs:
  'digital-transformation':{title:'Digital Transformation Consultancy',intro:'Practical advisory support for organizations planning how technology, data and automation can improve the way they operate.',includes:['Digital maturity assessment','Process and systems review','Transformation roadmap','Technology recommendations','Data and automation strategy','Implementation planning and change support']}
 };"""
           s=re.sub(r"const CREATIVE_SERVICES=\{.*?\n\};",new_services,s,count=1,flags=re.S)
-
-          s=s.replace("Choose the exact creative media service you need and review the typical deliverables before sending your request.","Choose the exact Data, AI or Business Automation service you need and review the typical scope before sending your request.")
-          s=s.replace("Creative assignments are scoped around the location, duration, production requirements and final deliverables. Travel, venue, talent, printing or other third-party production costs are identified separately where applicable.","Data, AI and automation engagements are scoped around the business problem, data readiness, systems involved, implementation requirements and measurable outcomes. Third-party software, platform or API costs are identified separately where applicable.")
-          s=s.replace("Final scope, schedule, deliverables and professional service fee are confirmed after DVL reviews your brief. Applicable third-party production costs are quoted separately.","Final scope, implementation plan, deliverables and professional service fee are confirmed after DVL reviews your business requirements. Applicable third-party software, platform or API costs are quoted separately.")
-          s=s.replace("Professional visual content that helps businesses present their brands, products, people and activities with greater credibility and market visibility.","Data, AI and automation solutions that help businesses improve decisions, automate repetitive work and modernize operations.")
-          s=s.replace("professional visual content","data, AI and business automation solutions")
-          s=s.replace("creating professional visual content","using data, AI and automation to improve operations")
-          s=s.replace("strengthening your market presence","transforming your operations")
-          s=s.replace("market visibility","operational intelligence and efficiency")
-
+          s=s.replace('Choose the exact creative media service you need and review the typical deliverables before sending your request.','Choose the exact Data, AI or Business Automation service you need and review the typical scope before sending your request.')
+          s=s.replace('Creative assignments are scoped around the location, duration, production requirements and final deliverables. Travel, venue, talent, printing or other third-party production costs are identified separately where applicable.','Data, AI and automation engagements are scoped around the business problem, data readiness, systems involved, implementation requirements and measurable outcomes. Third-party software, platform or API costs are identified separately where applicable.')
+          s=s.replace('Final scope, schedule, deliverables and professional service fee are confirmed after DVL reviews your brief. Applicable third-party production costs are quoted separately.','Final scope, implementation plan, deliverables and professional service fee are confirmed after DVL reviews your business requirements. Applicable third-party software, platform or API costs are quoted separately.')
+          s=s.replace('Professional visual content that helps businesses present their brands, products, people and activities with greater credibility and market visibility.','Data, AI and automation solutions that help businesses improve decisions, automate repetitive work and modernize operations.')
+          s=s.replace('creating professional visual content','using data, AI and automation to improve operations')
+          s=s.replace('strengthening your market presence','transforming your operations')
           p.write_text(s)
+          PY
       - name: Validate transformation
-        shell: python
         run: |
+          python3 <<'PY'
           from pathlib import Path
           s=Path('index.html').read_text()
           required=['TRANSFORM — Data, AI & Business Automation','AI Business Agents','Workflow Automation','Business Intelligence Dashboards','Data Analytics','AI-Powered Business Solutions','Digital Transformation Consultancy']
           missing=[x for x in required if x not in s]
           old=['Corporate Photography & Videography','Product Photography & Videography','Commercial Visuals']
           leftover=[x for x in old if x in s]
-          if missing or leftover:
-            raise SystemExit(f'missing={missing}, leftover={leftover}')
+          if missing or leftover: raise SystemExit(f'missing={missing}, leftover={leftover}')
+          PY
       - name: Commit transformed frontend
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add index.html
-          git commit -m "Apply TRANSFORM service model" || exit 0
+          git diff --cached --quiet && exit 0
+          git commit -m "Apply TRANSFORM service model"
           git push
