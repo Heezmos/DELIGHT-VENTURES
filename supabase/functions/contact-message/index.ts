@@ -20,6 +20,15 @@ async function sha256(value: string) {
   return Array.from(new Uint8Array(hash)).map((b) => b.toString(16).padStart(2, "0")).join("");
 }
 
+function escapeHtml(value: string): string {
+  return value.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/\"/g, "&quot;").replace(/'/g, "&#39;");
+}
+
+async function safelySendEmail(payload: Record<string, unknown>, label: string) {
+  try { return await sendEmail(payload); }
+  catch (error) { console.error(`${label} delivery failed`, error); return { skipped: true, reason: "delivery_failed" }; }
+}
+
 async function sendEmail(payload: Record<string, unknown>) {
   const apiKey = Deno.env.get("RESEND_API_KEY");
   if (!apiKey) return { skipped: true, reason: "RESEND_API_KEY not configured" };
@@ -107,28 +116,28 @@ Deno.serve(async (req: Request) => {
 
     let adminEmail = { skipped: true as boolean, reason: "DVL_INBOX_EMAIL not configured" } as Record<string, unknown>;
     if (inboxEmail) {
-      adminEmail = await sendEmail({
+      adminEmail = await safelySendEmail({
         from: fromEmail,
         to: [inboxEmail],
         reply_to: email,
         subject,
-        html: `<h2>New Delight Ventures enquiry</h2><p><strong>Reference:</strong> ${contact.reference_no}</p><p><strong>Name:</strong> ${fullName}</p><p><strong>Email:</strong> ${email}</p><p><strong>Organization:</strong> ${organization || "—"}</p><p><strong>Phone/WhatsApp:</strong> ${phone || "—"}</p><p><strong>Service:</strong> ${serviceInterest || "—"}</p><p><strong>Preferred contact:</strong> ${preferredContactMethod || "email"}</p><hr><p>${message.replace(/\n/g, "<br>")}</p>`,
-      });
+        html: `<h2>New Delight Ventures enquiry</h2><p><strong>Reference:</strong> ${escapeHtml(contact.reference_no)}</p><p><strong>Name:</strong> ${escapeHtml(fullName)}</p><p><strong>Email:</strong> ${escapeHtml(email)}</p><p><strong>Organization:</strong> ${escapeHtml(organization || "—")}</p><p><strong>Phone/WhatsApp:</strong> ${escapeHtml(phone || "—")}</p><p><strong>Service:</strong> ${escapeHtml(serviceInterest || "—")}</p><p><strong>Preferred contact:</strong> ${escapeHtml(preferredContactMethod || "email")}</p><hr><p>${escapeHtml(message).replace(/\n/g, "<br>")}</p>`,
+      }, "admin notification");
     }
 
-    const clientEmail = await sendEmail({
+    const clientEmail = await safelySendEmail({
       from: fromEmail,
       to: [email],
       subject: `We received your message — ${contact.reference_no}`,
-      html: `<h2>Thank you for contacting Delight Ventures</h2><p>Hello ${fullName},</p><p>We have received your message and our team will review it shortly.</p><p><strong>Your enquiry reference is ${contact.reference_no}.</strong></p><p>Please keep this reference if you need to follow up.</p><p>Delight Ventures Limited<br>Helping Businesses Launch, Digitize & Grow.</p>`,
-    });
+      html: `<h2>Thank you for contacting Delight Ventures</h2><p>Hello ${escapeHtml(fullName)},</p><p>We have received your message and our team will review it shortly.</p><p><strong>Your enquiry reference is ${contact.reference_no}.</strong></p><p>Please keep this reference if you need to follow up.</p><p>Delight Ventures Limited<br>Helping Businesses Launch, Digitize & Grow.</p>`,
+    }, "client acknowledgement");
 
     return json({
       ok: true,
       reference_no: contact.reference_no,
       email_delivery: {
-        admin_notification: adminEmail.skipped ? "pending_configuration" : "sent",
-        client_acknowledgement: clientEmail.skipped ? "pending_configuration" : "sent",
+        admin_notification: adminEmail.skipped ? (adminEmail.reason === "delivery_failed" ? "failed" : "pending_configuration") : "sent",
+        client_acknowledgement: clientEmail.skipped ? (clientEmail.reason === "delivery_failed" ? "failed" : "pending_configuration") : "sent",
       },
     }, 201);
   } catch (error) {
