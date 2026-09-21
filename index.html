@@ -817,7 +817,8 @@ window.addEventListener('scroll',()=>{
 });
 
 // Contact form
-function showDVLFormError(message){const err=document.getElementById('fs-err');if(!err)return;err.textContent=message;err.style.display='block';window.setTimeout(()=>{err.style.display='none'},5000)}
+let dvlFormErrorTimer;
+function showDVLFormError(message){const err=document.getElementById('fs-err');if(!err)return;window.clearTimeout(dvlFormErrorTimer);err.textContent=message;err.style.display='block';dvlFormErrorTimer=window.setTimeout(()=>{err.style.display='none'},7000)}
 async function handleForm(e){
  e.preventDefault();
  const form=e.currentTarget,btn=document.getElementById('submitBtn'),ok=document.getElementById('fs-ok'),err=document.getElementById('fs-err');
@@ -825,9 +826,11 @@ async function handleForm(e){
  const organization=document.getElementById('f-organization')?.value.trim()||'',phone=document.getElementById('f-phone')?.value.trim()||'';
  const service=document.getElementById('f-service').value||'General Inquiry',preferredContactMethod=document.getElementById('f-contact-method')?.value||'email';
  const message=document.getElementById('f-msg').value.trim(),consent=document.getElementById('f-consent')?.checked===true,honeypot=document.getElementById('f-company-website')?.value||'';
+ if(btn.disabled)return;
  if(name.length<2){showDVLFormError('Please enter your full name.');return}
  if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){showDVLFormError('Please enter a valid email address.');return}
  if(message.length<10){showDVLFormError('Please enter a message of at least 10 characters.');return}
+ if(message.length>5000){showDVLFormError('Please shorten your message to 5,000 characters.');return}
  if((preferredContactMethod==='phone'||preferredContactMethod==='whatsapp')&&!phone){showDVLFormError('Please enter your phone number when choosing Phone or WhatsApp as your preferred contact method.');return}
  if(!consent){showDVLFormError('Please confirm that we may use your information to respond to this enquiry.');return}
  btn.disabled=true;btn.textContent='Sending…';ok.style.display='none';err.style.display='none';
@@ -835,9 +838,10 @@ async function handleForm(e){
  try{
   const res=await fetch(API_URL,{method:'POST',headers:{'Content-Type':'application/json'},signal:controller.signal,body:JSON.stringify({full_name:name,email,organization:organization||null,phone:phone||null,service_interest:service,preferred_contact_method:preferredContactMethod,message,consent,company_website:honeypot})});
   const data=await res.json().catch(()=>({}));if(!res.ok)throw new Error(data.error||'Unable to send your message.');
-  const ref=data.reference_no?` Your reference is ${data.reference_no}.`:'';ok.textContent='Thank you. Your enquiry has been received.'+ref+' Our team will review it and contact you through your preferred method.';ok.style.display='block';form.reset();
+  if(data.ok!==true||!data.reference_no)throw new Error('We could not confirm your enquiry reference. Please contact DVL before resubmitting.');
+  ok.textContent='Thank you. Your enquiry has been received. Your reference is '+data.reference_no+'. Please save this reference. Our team will review your request and contact you through your preferred method.';ok.style.display='block';form.reset();
   const msg=document.getElementById('f-msg');if(msg)delete msg.dataset.dvlPrefill;
- }catch(error){showDVLFormError(error?.name==='AbortError'?'The request took too long. Please check your connection and try again.':(error?.message||'We could not send your message right now. Please try again shortly.'))}
+ }catch(error){showDVLFormError(error?.name==='AbortError'?'The request took too long. Your enquiry may have been received; please contact DVL before submitting it again to avoid duplicates.':(error?.message||'We could not send your message right now. Please try again shortly.'))}
  finally{window.clearTimeout(timeout);btn.disabled=false;btn.textContent='Send Message'}
 }
 
@@ -845,11 +849,11 @@ const DVL_SERVICES={business:{kicker:'Launch',title:'Business & Compliance Servi
 function dvlKey(title){if(title.includes('Business & Compliance'))return'business';if(title.includes('Digital Solutions'))return'digital';if(title.includes('Creative Media'))return'creative';return null}
 const serviceModal=document.getElementById('serviceModal');
 function resetDVLModalDecorations(){const list=document.getElementById('serviceModalList');if(list)list.className='';['businessComplianceNote','digitalServiceNote','creativeServiceNote'].forEach(id=>document.getElementById(id)?.remove())}
-function setDVLMessagePrefill(value){const msg=document.getElementById('f-msg');if(!msg)return;const previous=msg.dataset.dvlPrefill||'',current=msg.value.trim();if(!current||current===previous.trim()){msg.value=value;msg.dataset.dvlPrefill=value}}
+function setDVLMessagePrefill(value){const msg=document.getElementById('f-msg');if(!msg)return;const previous=msg.dataset.dvlPrefill||'',current=msg.value.trim();if(!current||current===previous.trim()){msg.value=value;msg.dataset.dvlPrefill=value}else if(!current.includes(value)){msg.value=current+'\n\n'+value;delete msg.dataset.dvlPrefill}}
 document.getElementById('f-msg')?.addEventListener('input',e=>{const msg=e.currentTarget;if(msg.dataset.dvlPrefill&&msg.value!==msg.dataset.dvlPrefill)delete msg.dataset.dvlPrefill});
-function closeDVLService(){serviceModal?.classList.remove('open');serviceModal?.setAttribute('aria-hidden','true');document.body.style.overflow=''}
-function prefillDVLRequest(key){const d=DVL_SERVICES[key],form=document.querySelector('#contact form, form.contact-form, #contactForm');if(!d||!form)return;const select=document.getElementById('f-service');if(select){const match=[...select.options].find(o=>o.textContent.toLowerCase().includes(d.title.split(' Services')[0].toLowerCase())||o.value.toLowerCase().includes(key));if(match)select.value=match.value}setDVLMessagePrefill('I am interested in '+d.title+'. Please contact me to discuss my requirements.')}
-function openDVLService(key){const d=DVL_SERVICES[key];if(!d||!serviceModal)return;document.getElementById('serviceModalKicker').textContent=d.kicker;document.getElementById('serviceModalTitle').textContent=d.title;document.getElementById('serviceModalIntro').textContent=d.intro;document.getElementById('serviceModalList').innerHTML=d.items.map(x=>'<li>'+x+'</li>').join('');document.getElementById('modalRequestBtn').dataset.requestDivision=key;serviceModal.classList.add('open');serviceModal.setAttribute('aria-hidden','false');document.body.style.overflow='hidden'}
+function closeDVLService(){serviceModal?.classList.remove('open');serviceModal?.setAttribute('aria-hidden','true');document.body.style.overflow='';if(serviceModal?.dataset.returnFocus==='true'){document.activeElement?.blur();serviceModal.dataset.returnFocus='false'}}
+function prefillDVLRequest(key){const d=DVL_SERVICES[key];if(!d)return;const select=document.getElementById('f-service');if(select&&[...select.options].some(o=>o.value===d.title))select.value=d.title;setDVLMessagePrefill('I am interested in '+d.title+'. Please contact me to discuss my requirements.')}
+function openDVLService(key){const d=DVL_SERVICES[key];if(!d||!serviceModal)return;resetDVLModalDecorations();document.getElementById('modalRequestBtn').textContent='Request '+d.title+' →';document.getElementById('serviceModalKicker').textContent=d.kicker;document.getElementById('serviceModalTitle').textContent=d.title;document.getElementById('serviceModalIntro').textContent=d.intro;document.getElementById('serviceModalList').innerHTML=d.items.map(x=>'<li>'+x+'</li>').join('');document.getElementById('modalRequestBtn').dataset.requestDivision=key;serviceModal.classList.add('open');serviceModal.setAttribute('aria-hidden','false');document.body.style.overflow='hidden'}
 document.querySelectorAll('.pillar').forEach(card=>{const h=card.querySelector('h3');const key=h?dvlKey(h.textContent):null;if(!key||card.querySelector('.service-actions'))return;const actions=document.createElement('div');actions.className='service-actions';actions.innerHTML='<button type="button" class="service-detail-btn">Explore Services</button><a href="#contact" class="service-request-btn">Request Service →</a>';actions.querySelector('button').addEventListener('click',()=>openDVLService(key));actions.querySelector('a').addEventListener('click',()=>prefillDVLRequest(key));card.appendChild(actions)});
 document.querySelector('.service-modal-close')?.addEventListener('click',closeDVLService);serviceModal?.addEventListener('click',e=>{if(e.target===serviceModal)closeDVLService()});document.addEventListener('keydown',e=>{if(e.key==='Escape')closeDVLService()});
 
@@ -973,7 +977,7 @@ function resolveDVLRequest(key){
  if(exact){let detail='requirements and next steps';if(DIGITAL_SERVICES[key])detail='requirements, scope and next steps';if(CREATIVE_SERVICES[key])detail='assignment, deliverables and next steps';return {service:exact.title,message:'I am interested in '+exact.title+'. Please contact me to discuss the '+detail+'.'}}
  const division=DVL_SERVICES[key];return division?{service:division.title,message:'I am interested in '+division.title+'. Please contact me to discuss my requirements.'}:null
 }
-document.getElementById('modalRequestBtn')?.addEventListener('click',e=>{const request=resolveDVLRequest(e.currentTarget.dataset.requestDivision);if(!request)return;const select=document.getElementById('f-service');if(select&&[...select.options].some(o=>o.value===request.service))select.value=request.service;setDVLMessagePrefill(request.message);closeDVLService()});
+document.getElementById('modalRequestBtn')?.addEventListener('click',e=>{const request=resolveDVLRequest(e.currentTarget.dataset.requestDivision);if(!request)return;const select=document.getElementById('f-service');if(select&&[...select.options].some(o=>o.value===request.service))select.value=request.service;setDVLMessagePrefill(request.message);closeDVLService();document.getElementById('contact')?.scrollIntoView({behavior:'smooth',block:'start'});window.setTimeout(()=>document.getElementById('f-name')?.focus({preventScroll:true}),400)});
 
 </script>
 </body>
