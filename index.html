@@ -243,7 +243,8 @@ h2.sec-title{font-family:'EB Garamond',serif;
   transition:all .25s;display:flex;align-items:center;justify-content:center;gap:8px;}
 .submit-btn:hover{background:var(--dark3);transform:translateY(-1px);
   box-shadow:0 8px 24px rgba(192,144,79,0.2);}
-.submit-btn:disabled{opacity:.68;cursor:wait;transform:none!important;box-shadow:none!important;}\n#fs-ok{display:none;margin-top:12px;padding:14px;text-align:center;
+.submit-btn:disabled{opacity:.68;cursor:wait;transform:none!important;box-shadow:none!important;}
+#fs-ok{display:none;margin-top:12px;padding:14px;text-align:center;
   background:rgba(192,144,79,0.1);border:1px solid rgba(192,144,79,0.25);
   border-radius:10px;color:var(--gold);font-size:14px;font-weight:600;}
 #fs-err{display:none;margin-top:12px;padding:14px;text-align:center;
@@ -971,7 +972,10 @@ function ensureCreativeServiceOptions(){const select=document.getElementById('f-
 ensureCreativeServiceOptions();
 
 
-// FRONTEND CONVERSION ROUTER — one source of truth for all three service divisions.\nopenDVLService=function(key){if(key==='business')return renderBusinessServiceMenu();if(key==='digital')return renderDigitalServiceMenu();if(key==='creative')return renderCreativeServiceMenu();};\n\n// Centralized conversion CTA — one listener, one source of truth.
+// FRONTEND CONVERSION ROUTER — one source of truth for all three service divisions.
+openDVLService=function(key){if(key==='business')return renderBusinessServiceMenu();if(key==='digital')return renderDigitalServiceMenu();if(key==='creative')return renderCreativeServiceMenu();}
+
+// Centralized conversion CTA — one listener, one source of truth.
 function resolveDVLRequest(key){
  const exact=BUSINESS_SERVICES[key]||DIGITAL_SERVICES[key]||CREATIVE_SERVICES[key];
  if(exact){let detail='requirements and next steps';if(DIGITAL_SERVICES[key])detail='requirements, scope and next steps';if(CREATIVE_SERVICES[key])detail='assignment, deliverables and next steps';return {service:exact.title,message:'I am interested in '+exact.title+'. Please contact me to discuss the '+detail+'.'}}
