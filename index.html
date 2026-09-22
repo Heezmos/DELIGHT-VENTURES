@@ -243,7 +243,7 @@ h2.sec-title{font-family:'EB Garamond',serif;
   transition:all .25s;display:flex;align-items:center;justify-content:center;gap:8px;}
 .submit-btn:hover{background:var(--dark3);transform:translateY(-1px);
   box-shadow:0 8px 24px rgba(192,144,79,0.2);}
-#fs-ok{display:none;margin-top:12px;padding:14px;text-align:center;
+.submit-btn:disabled{opacity:.68;cursor:wait;transform:none!important;box-shadow:none!important;}\n#fs-ok{display:none;margin-top:12px;padding:14px;text-align:center;
   background:rgba(192,144,79,0.1);border:1px solid rgba(192,144,79,0.25);
   border-radius:10px;color:var(--gold);font-size:14px;font-weight:600;}
 #fs-err{display:none;margin-top:12px;padding:14px;text-align:center;
@@ -865,7 +865,7 @@ const BUSINESS_SERVICES={
  'licensing-support':{title:'Business Licensing Support',intro:'Guidance and administrative support for businesses identifying and preparing for relevant licensing requirements.',includes:['Licensing requirement assessment','Documentation checklist','Application preparation support','Process guidance','Application follow-up','Renewal support where applicable']},
  'business-consultancy':{title:'Business Consultancy',intro:'Practical advisory support for entrepreneurs and organizations strengthening their business model, operations and growth plans.',includes:['Startup and business advisory','Business-model development','Business planning','Basic market research','Process and operational development','Growth and digitalization recommendations','Business documentation and technology recommendations']}
 };
-const baseOpenDVLService=openDVLService;
+
 function renderBusinessServiceMenu(){
  resetDVLModalDecorations();
  const d=DVL_SERVICES.business;if(!serviceModal)return;
@@ -889,7 +889,7 @@ function openBusinessService(key){
  const request=document.getElementById('modalRequestBtn');request.dataset.requestDivision=key;request.textContent='Request '+x.title+' →';
  let note=document.getElementById('businessComplianceNote');if(!note){note=document.createElement('p');note.id='businessComplianceNote';note.className='compliance-note';document.querySelector('.service-modal-footer').before(note)}note.textContent='DVL provides administrative, documentation and process support. The relevant authority is responsible for issuing registrations, identifiers or licences.';
 }
-openDVLService=function(key){if(key==='business')return renderBusinessServiceMenu();return baseOpenDVLService(key)};
+
 function ensureExactServiceOptions(){const select=document.getElementById('f-service');if(!select)return;Object.values(BUSINESS_SERVICES).forEach(x=>{if([...select.options].some(o=>o.value===x.title))return;const o=document.createElement('option');o.value=x.title;o.textContent='Business & Compliance — '+x.title;const general=[...select.options].find(o=>o.textContent.includes('Digital Solutions'));select.insertBefore(o,general||null)})}
 ensureExactServiceOptions();
 
@@ -905,7 +905,7 @@ const DIGITAL_SERVICES={
  'inventory-systems':{title:'Inventory Management Systems',intro:'Stock-management tools that help businesses monitor products, suppliers, stock movements and low-stock risks.',includes:['Product and SKU management','Stock levels and movements','Supplier records','Sales-linked stock updates','Low-stock alerts','Inventory reports','Branch or location support','Management dashboards']},
  'whatsapp-integration':{title:'WhatsApp Business Integration',intro:'Practical WhatsApp connections that make it easier for customers to enquire, order and communicate with a business.',includes:['Website-to-WhatsApp links','Product and service enquiries','WhatsApp ordering flows','Lead capture','Support links','Automated responses where appropriate','Customer notifications','Workflow integrations']}
 };
-const baseDigitalOpenDVLService=openDVLService;
+
 function renderDigitalServiceMenu(){
  resetDVLModalDecorations();
  const d=DVL_SERVICES.digital;if(!serviceModal)return;
@@ -929,7 +929,7 @@ function openDigitalService(key){
  const request=document.getElementById('modalRequestBtn');request.dataset.requestDivision=key;request.textContent='Request '+x.title+' →';
  let note=document.getElementById('digitalServiceNote');if(!note){note=document.createElement('p');note.id='digitalServiceNote';note.className='digital-service-note';document.querySelector('.service-modal-footer').before(note)}note.textContent='Final scope, timeline and professional service fee are confirmed after DVL reviews your requirements. Any third-party fees are identified separately where applicable.';
 }
-openDVLService=function(key){if(key==='digital')return renderDigitalServiceMenu();return baseDigitalOpenDVLService(key)};
+
 function ensureDigitalServiceOptions(){const select=document.getElementById('f-service');if(!select)return;Object.values(DIGITAL_SERVICES).forEach(x=>{if([...select.options].some(o=>o.value===x.title))return;const o=document.createElement('option');o.value=x.title;o.textContent='Digital Solutions — '+x.title;const creative=[...select.options].find(o=>o.textContent.includes('Creative Media'));select.insertBefore(o,creative||null)})}
 ensureDigitalServiceOptions();
 
@@ -942,7 +942,7 @@ const CREATIVE_SERVICES={
  'promotional-content':{title:'Promotional Content',intro:'Campaign-ready photography and video content designed to help businesses communicate offers, stories and brand messages.',includes:['Promotional videos','Social-media content','Short-form video content','Advertising visuals','Campaign photography','Brand storytelling','Website promotional visuals']},
  'commercial-visuals':{title:'Commercial Visuals',intro:'Strategic visual production for brands and organizations that need stronger commercial storytelling and institutional communication.',includes:['Brand campaigns','Commercial photography','Corporate storytelling','Tourism and hospitality visuals','Marketing campaign assets','Business documentary content','Institutional visual communication']}
 };
-const baseCreativeOpenDVLService=openDVLService;
+
 function renderCreativeServiceMenu(){
  resetDVLModalDecorations();
  const d=DVL_SERVICES.creative;if(!serviceModal)return;
@@ -966,12 +966,12 @@ function openCreativeService(key){
  const request=document.getElementById('modalRequestBtn');request.dataset.requestDivision=key;request.textContent='Request '+x.title+' →';
  let note=document.getElementById('creativeServiceNote');if(!note){note=document.createElement('p');note.id='creativeServiceNote';note.className='creative-service-note';document.querySelector('.service-modal-footer').before(note)}note.textContent='Final scope, schedule, deliverables and professional service fee are confirmed after DVL reviews your brief. Applicable third-party production costs are quoted separately.';
 }
-openDVLService=function(key){if(key==='creative')return renderCreativeServiceMenu();return baseCreativeOpenDVLService(key)};
+
 function ensureCreativeServiceOptions(){const select=document.getElementById('f-service');if(!select)return;Object.values(CREATIVE_SERVICES).forEach(x=>{if([...select.options].some(o=>o.value===x.title))return;const o=document.createElement('option');o.value=x.title;o.textContent='Creative Media — '+x.title;select.appendChild(o)})}
 ensureCreativeServiceOptions();
 
 
-// Centralized conversion CTA — one listener, one source of truth.
+// FRONTEND CONVERSION ROUTER — one source of truth for all three service divisions.\nopenDVLService=function(key){if(key==='business')return renderBusinessServiceMenu();if(key==='digital')return renderDigitalServiceMenu();if(key==='creative')return renderCreativeServiceMenu();};\n\n// Centralized conversion CTA — one listener, one source of truth.
 function resolveDVLRequest(key){
  const exact=BUSINESS_SERVICES[key]||DIGITAL_SERVICES[key]||CREATIVE_SERVICES[key];
  if(exact){let detail='requirements and next steps';if(DIGITAL_SERVICES[key])detail='requirements, scope and next steps';if(CREATIVE_SERVICES[key])detail='assignment, deliverables and next steps';return {service:exact.title,message:'I am interested in '+exact.title+'. Please contact me to discuss the '+detail+'.'}}
