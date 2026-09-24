@@ -855,11 +855,12 @@ document.getElementById('f-msg')?.addEventListener('input',e=>{const msg=e.curre
 let dvlModalOpener=null;
 function activateDVLModal(){
  if(!serviceModal)return;
- dvlModalOpener=document.activeElement instanceof HTMLElement?document.activeElement:null;
+ const alreadyOpen=serviceModal.classList.contains('open');
+ if(!alreadyOpen)dvlModalOpener=document.activeElement instanceof HTMLElement?document.activeElement:null;
  serviceModal.classList.add('open');
  serviceModal.setAttribute('aria-hidden','false');
  document.body.style.overflow='hidden';
- window.setTimeout(()=>serviceModal.querySelector('.service-modal-close')?.focus(),0);
+ if(!alreadyOpen)window.setTimeout(()=>serviceModal.querySelector('.service-modal-close')?.focus(),0);
 }
 function closeDVLService(){
  if(!serviceModal)return;
