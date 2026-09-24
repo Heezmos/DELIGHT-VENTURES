@@ -842,6 +842,9 @@ async function handleForm(e){
   if(data.ok!==true||!data.reference_no)throw new Error('We could not confirm your enquiry reference. Please contact DVL before resubmitting.');
   ok.textContent='Thank you. Your enquiry has been received. Your reference is '+data.reference_no+'. Please save this reference. Our team will review your request and contact you through your preferred method.';ok.style.display='block';form.reset();
   const msg=document.getElementById('f-msg');if(msg)delete msg.dataset.dvlPrefill;
+  const serviceSelect=document.getElementById('f-service');if(serviceSelect)delete serviceSelect.dataset.dvlSelectedService;
+  updateDVLConversionContext();
+  ok.setAttribute('tabindex','-1');ok.focus({preventScroll:true});
  }catch(error){showDVLFormError(error?.name==='AbortError'?'The request took too long. Your enquiry may have been received; please contact DVL before submitting it again to avoid duplicates.':(error?.message||'We could not send your message right now. Please try again shortly.'))}
  finally{window.clearTimeout(timeout);btn.disabled=false;btn.textContent='Send Message'}
 }
@@ -1003,11 +1006,21 @@ function resolveDVLRequest(key){
  if(exact){let detail='requirements and next steps';if(DIGITAL_SERVICES[key])detail='requirements, scope and next steps';if(CREATIVE_SERVICES[key])detail='assignment, deliverables and next steps';return {service:exact.title,message:'I am interested in '+exact.title+'. Please contact me to discuss the '+detail+'.'}}
  const division=DVL_SERVICES[key];return division?{service:division.title,message:'I am interested in '+division.title+'. Please contact me to discuss my requirements.'}:null
 }
+function updateDVLConversionContext(){
+ const select=document.getElementById('f-service'),context=document.getElementById('dvlConversionContext'),label=document.getElementById('dvlConversionService');
+ if(!select||!context||!label)return;
+ const value=select.value;
+ if(!value||value==='General Inquiry'){context.hidden=true;label.textContent='';return}
+ label.textContent=value;context.hidden=false;
+}
 function applyDVLRequestToForm(request){
  if(!request)return false;
  const select=document.getElementById('f-service');
- if(select&&[...select.options].some(o=>o.value===request.service))select.value=request.service;
+ if(!select||![...select.options].some(o=>o.value===request.service))return false;
+ select.value=request.service;
+ select.dataset.dvlSelectedService=request.service;
  setDVLMessagePrefill(request.message);
+ updateDVLConversionContext();
  return true;
 }
 document.getElementById('modalRequestBtn')?.addEventListener('click',e=>{
@@ -1018,6 +1031,25 @@ document.getElementById('modalRequestBtn')?.addEventListener('click',e=>{
  document.getElementById('contact')?.scrollIntoView({behavior:'smooth',block:'start'});
  window.setTimeout(()=>document.getElementById('f-name')?.focus({preventScroll:true}),450);
 });
+
+// Conversion context: keep the visitor's chosen service visible through the enquiry journey.
+(function initializeDVLConversionContext(){
+ const select=document.getElementById('f-service'),messageGroup=document.getElementById('f-msg')?.closest('.fg');
+ if(!select||!messageGroup||document.getElementById('dvlConversionContext'))return;
+ const context=document.createElement('div');
+ context.id='dvlConversionContext';context.hidden=true;context.setAttribute('role','status');context.setAttribute('aria-live','polite');
+ context.style.cssText='margin:0 0 18px;padding:13px 15px;border:1px solid rgba(180,140,70,.35);background:rgba(180,140,70,.08);font-size:.92rem;line-height:1.45';
+ context.innerHTML='<strong style="display:block;margin-bottom:3px">Selected service</strong><span id="dvlConversionService"></span>';
+ messageGroup.parentNode.insertBefore(context,messageGroup);
+ select.addEventListener('change',()=>{
+   select.dataset.dvlSelectedService=select.value;
+   updateDVLConversionContext();
+ });
+ updateDVLConversionContext();
+})();
+
+// Prevent accidental loss of a service selected from a conversion CTA.
+window.addEventListener('pageshow',()=>updateDVLConversionContext());
 
 </script>
 </body>
