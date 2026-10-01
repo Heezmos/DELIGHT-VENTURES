@@ -964,7 +964,7 @@ function openDigitalService(key){
  let note=document.getElementById('digitalServiceNote');if(!note){note=document.createElement('p');note.id='digitalServiceNote';note.className='digital-service-note';document.querySelector('.service-modal-footer').before(note)}note.textContent='Final scope, timeline and professional service fee are confirmed after Delight Holdings reviews your requirements. Any third-party fees are identified separately where applicable.';
 }
 
-function ensureDigitalServiceOptions(){const select=document.getElementById('f-service');if(!select)return;Object.values(DIGITAL_SERVICES).forEach(x=>{if([...select.options].some(o=>o.value===x.title))return;const o=document.createElement('option');o.value=x.title;o.textContent='Digital Solutions — '+x.title;const creative=[...select.options].find(o=>o.textContent.includes('Creative Media'));select.insertBefore(o,creative||null)})}
+function ensureDigitalServiceOptions(){const select=document.getElementById('f-service');if(!select)return;Object.values(DIGITAL_SERVICES).forEach(x=>{if([...select.options].some(o=>o.value===x.title))return;const o=document.createElement('option');o.value=x.title;o.textContent='Digital Solutions — '+x.title;select.appendChild(o)})}
 ensureDigitalServiceOptions();
 
 
