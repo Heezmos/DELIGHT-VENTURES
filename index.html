@@ -393,7 +393,7 @@ p,h1,h2,h3,h4,h5,a,button,label,span{overflow-wrap:break-word;}
 
 /* Delight Holdings identity and portfolio */
 .logo-text small{font-size:12px;letter-spacing:1px;}
-.pillars-grid{grid-template-columns:repeat(2,minmax(0,1fr));}
+.pillars-grid{grid-template-columns:repeat(3,minmax(0,1fr));}
 .portfolio-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:24px;}
 .portfolio-card{padding:32px;border:1px solid var(--border);border-radius:16px;background:#fff;}
 .portfolio-number{font:600 32px 'EB Garamond',Georgia,serif;color:var(--gold);}
@@ -401,7 +401,7 @@ p,h1,h2,h3,h4,h5,a,button,label,span{overflow-wrap:break-word;}
 .portfolio-card h3{font:700 32px 'EB Garamond',Georgia,serif;margin:8px 0 16px;}
 .portfolio-card p{font-size:17px;line-height:1.6;}
 .portfolio-card .portfolio-family{font-size:14px;color:var(--muted);border-top:1px solid var(--border);padding-top:18px;margin-top:24px;}
-@media(max-width:1000px){.portfolio-grid{grid-template-columns:repeat(2,minmax(0,1fr));}.nav-links{gap:14px;}}
+@media(max-width:1000px){.pillars-grid{grid-template-columns:1fr;}.portfolio-grid{grid-template-columns:repeat(2,minmax(0,1fr));}.nav-links{gap:14px;}}
 @media(max-width:640px){.portfolio-grid,.pillars-grid{grid-template-columns:1fr;}.portfolio-card{padding:26px;}.hero-brand{min-height:260px;}.hero-brand img{max-width:260px;}}
 
 #portfolio .pillars-header h2{color:#1C1208;}
@@ -512,8 +512,8 @@ p,h1,h2,h3,h4,h5,a,button,label,span{overflow-wrap:break-word;}
 <section id="pillars">
   <div class="pillars-header reveal">
     <div class="sec-tag">Our Services</div>
-    <h2 class="sec-title">Business Support. Digital Expertise.</h2>
-    <p class="sec-lead">Our business and technology services support entrepreneurs and organizations from establishment to digital transformation.</p>
+    <h2 class="sec-title">Launch. Digitize. Optimize.</h2>
+    <p class="sec-lead">Three connected service divisions help you establish your business, build digital systems, and turn data and everyday workflows into practical improvements.</p>
   </div>
   <div class="pillars-grid reveal">
 
@@ -552,6 +552,15 @@ p,h1,h2,h3,h4,h5,a,button,label,span{overflow-wrap:break-word;}
       <a href="#contact" class="pillar-cta">Build your digital presence →</a>
     </div>
 
+    <div class="pillar">
+      <div class="pillar-num">III</div><div class="pillar-word">Optimize</div>
+      <div class="pillar-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20h16M7 16V9M12 16V4M17 16v-5"/></svg></div>
+      <h3>Business Intelligence &amp; AI Automation</h3>
+      <p class="pillar-desc">Understand your business data, reduce repetitive work and make better-informed decisions. We build clear dashboards, clean and analyse records, automate agreed workflows, and create AI assistants using approved business information.</p>
+      <ul class="pillar-list"><li>Business dashboards</li><li>Data cleanup &amp; analysis</li><li>Workflow automation</li><li>AI business assistants</li><li>Monthly performance reporting</li></ul>
+      <p class="pillar-desc"><strong>For example:</strong> a retailer can see fast-selling products, low stock and overdue payments in one dashboard, with reminders for the team.</p>
+      <a href="#contact" class="pillar-cta" data-intelligence-request>Discuss your data and automation needs</a>
+    </div>
   </div>
 </section>
 
@@ -705,6 +714,7 @@ p,h1,h2,h3,h4,h5,a,button,label,span{overflow-wrap:break-word;}
             <option value="">Choose a service…</option>
             <option>Business &amp; Compliance Services</option>
             <option>Digital Solutions &amp; Systems</option>
+            <option>Business Intelligence &amp; AI Automation</option>
             <option>Portfolio &amp; Partnerships</option>
             <option>General Inquiry</option>
           </select></div>
@@ -753,6 +763,7 @@ p,h1,h2,h3,h4,h5,a,button,label,span{overflow-wrap:break-word;}
         <li><a href="#pillars">Business Registration</a></li>
         <li><a href="#pillars">Websites &amp; Ecommerce</a></li>
         <li><a href="#pillars">Business Systems</a></li>
+        <li><a href="#pillars">Business Intelligence &amp; AI Automation</a></li>
         <li><a href="#portfolio">Our Ventures</a></li>
       </ul>
     </div>
@@ -868,10 +879,10 @@ async function handleForm(e){
  finally{window.clearTimeout(timeout);btn.disabled=false;btn.textContent='Send Message'}
 }
 
-const DVL_SERVICES={business:{kicker:'Launch',title:'Business & Compliance Services',intro:'Practical administrative and advisory support to help entrepreneurs and organizations establish and maintain stronger business foundations.',items:['Business Registration','Tax Registration','NASSIT Setup','Business Licensing Support','Business Consultancy']},digital:{kicker:'Digitize',title:'Digital Solutions & Systems',intro:'Practical digital products and operational systems designed around the needs of startups, SMEs and organizations.',items:['Corporate Websites','E-Commerce Platforms','ERP Systems','CRM Systems','HRM Systems','Payment Gateway Integration','Inventory Management Systems','WhatsApp Business Integration']}};
-function dvlKey(title){if(title.includes('Business & Compliance'))return'business';if(title.includes('Digital Solutions'))return'digital';return null}
+const DVL_SERVICES={business:{kicker:'Launch',title:'Business & Compliance Services',intro:'Practical administrative and advisory support to help entrepreneurs and organizations establish and maintain stronger business foundations.',items:['Business Registration','Tax Registration','NASSIT Setup','Business Licensing Support','Business Consultancy']},digital:{kicker:'Digitize',title:'Digital Solutions & Systems',intro:'Practical digital products and operational systems designed around the needs of startups, SMEs and organizations.',items:['Corporate Websites','E-Commerce Platforms','ERP Systems','CRM Systems','HRM Systems','Payment Gateway Integration','Inventory Management Systems','WhatsApp Business Integration']},intelligence:{kicker:'Optimize',title:'Business Intelligence & AI Automation',intro:'Clear business insights and practical automation around your records, tools and goals.',items:['Business Dashboards','Data Cleanup & Analysis','Workflow Automation','AI Business Assistants','Monthly Performance Reporting']}};
+function dvlKey(title){if(title.includes('Business & Compliance'))return'business';if(title.includes('Digital Solutions'))return'digital';if(title.includes('Business Intelligence'))return'intelligence';return null}
 const serviceModal=document.getElementById('serviceModal');
-function resetDVLModalDecorations(){const list=document.getElementById('serviceModalList');if(list)list.className='';['businessComplianceNote','digitalServiceNote','creativeServiceNote'].forEach(id=>document.getElementById(id)?.remove())}
+function resetDVLModalDecorations(){const list=document.getElementById('serviceModalList');if(list)list.className='';['businessComplianceNote','digitalServiceNote','creativeServiceNote','intelligenceServiceNote'].forEach(id=>document.getElementById(id)?.remove())}
 function setDVLMessagePrefill(value){const msg=document.getElementById('f-msg');if(!msg)return;const previous=msg.dataset.dvlPrefill||'',current=msg.value.trim();if(!current||current===previous.trim()){msg.value=value;msg.dataset.dvlPrefill=value}else if(!current.includes(value)){msg.value=current+'\n\n'+value;delete msg.dataset.dvlPrefill}}
 document.getElementById('f-msg')?.addEventListener('input',e=>{const msg=e.currentTarget;if(msg.dataset.dvlPrefill&&msg.value!==msg.dataset.dvlPrefill)delete msg.dataset.dvlPrefill});
 let dvlModalOpener=null;
@@ -974,19 +985,52 @@ function ensureDigitalServiceOptions(){const select=document.getElementById('f-s
 ensureDigitalServiceOptions();
 
 
+
+const INTELLIGENCE_SERVICES={"business-dashboards": {"title": "Business Dashboards", "intro": "See how your business is performing without sorting through multiple spreadsheets. We turn your sales, expenses, stock and operational records into clear dashboards.", "includes": ["A review of your goals and available records", "Agreed measures such as sales, expenses and stock levels", "Interactive dashboards in Excel, Power BI or Tableau, selected for your needs", "Filters to compare periods, products or branches where data permits", "Data refresh setup and guidance", "A walkthrough so your team can use the dashboard"]}, "data-cleanup-analysis": {"title": "Data Cleanup & Analysis", "intro": "Make your records easier to trust and use. We organize messy spreadsheets, investigate inconsistencies and explain what the available data reveals.", "includes": ["A review of spreadsheets and existing data exports", "Duplicate detection and consistent formatting", "Identification of missing or inconsistent records for your review", "Analysis of patterns in sales, customers or operations", "A cleaned dataset and a clear findings report", "Recommendations for keeping future records consistent"]}, "workflow-automation": {"title": "Workflow Automation", "intro": "Reduce repetitive administrative work by connecting the tools you already use. We agree a specific workflow, automate suitable steps and keep people involved where decisions need review.", "includes": ["Mapping of the current workflow and its bottlenecks", "Enquiry follow-ups and task reminders", "Routine report preparation or scheduled notifications", "Connections between supported spreadsheets and business tools", "Testing of the agreed workflow and its exceptions", "Team training and documented handover"]}, "ai-business-assistants": {"title": "AI Business Assistants", "intro": "Give your team an assistant that can answer routine business questions using information you approve, such as service descriptions, policies and internal documents.", "includes": ["A defined purpose and intended users", "Preparation of approved business documents and knowledge", "An assistant for agreed enquiries or internal tasks", "Access rules appropriate to the information used", "Testing against representative questions", "Human handoff and guidance for reviewing responses"]}, "monthly-performance-reporting": {"title": "Monthly Performance Reporting", "intro": "Understand what changed in your business each month and what deserves attention. We turn your records into a consistent management report with practical discussion points.", "includes": ["Agreed performance measures and reporting schedule", "A monthly review of submitted business data", "Comparison with previous periods and agreed targets", "Charts and explanations of key changes", "Issues and opportunities for management review", "An optional review meeting and ongoing reporting support"]}};
+function renderIntelligenceServiceMenu(){
+ resetDVLModalDecorations();if(!serviceModal)return;
+ document.getElementById('serviceModalKicker').textContent='Optimize';
+ document.getElementById('serviceModalTitle').textContent=DVL_SERVICES.intelligence.title;
+ document.getElementById('serviceModalIntro').textContent='Choose the support you need and see what is included. We start by reviewing your business goals, records and current tools, then agree the scope, timeline and fee.';
+ const list=document.getElementById('serviceModalList');list.className='digital-service-list';
+ list.innerHTML=Object.entries(INTELLIGENCE_SERVICES).map(([key,x])=>'<li><button type="button" class="digital-subservice-btn" data-intelligence-service="'+key+'"><strong>'+x.title+'</strong><span>View →</span></button></li>').join('');
+ list.querySelectorAll('[data-intelligence-service]').forEach(btn=>btn.addEventListener('click',()=>openIntelligenceService(btn.dataset.intelligenceService)));
+ const request=document.getElementById('modalRequestBtn');request.dataset.requestDivision='intelligence';request.textContent='Request Business Intelligence & AI Automation';
+ const note=document.createElement('p');note.id='intelligenceServiceNote';note.className='digital-service-note';note.textContent='Available data and existing tools determine the scope. Setup is quoted separately from optional monthly reporting or support. Any software subscriptions or usage charges are identified before work begins.';document.querySelector('.service-modal-footer').before(note);
+ activateDVLModal();
+}
+function openIntelligenceService(key){
+ const x=INTELLIGENCE_SERVICES[key];if(!x||!serviceModal)return;
+ document.getElementById('serviceModalKicker').innerHTML='<button type="button" class="service-back" id="intelligenceServiceBack">← Back to Business Intelligence & AI Automation</button><div class="exact-service-label">Business Intelligence & AI Automation</div>';
+ document.getElementById('intelligenceServiceBack').addEventListener('click',renderIntelligenceServiceMenu);
+ document.getElementById('serviceModalTitle').textContent=x.title;
+ document.getElementById('serviceModalIntro').textContent=x.intro;
+ const list=document.getElementById('serviceModalList');list.className='';list.innerHTML=x.includes.map(i=>'<li>'+i+'</li>').join('');
+ const request=document.getElementById('modalRequestBtn');request.dataset.requestDivision=key;request.textContent='Request '+x.title;
+ let note=document.getElementById('intelligenceServiceNote');if(!note){note=document.createElement('p');note.id='intelligenceServiceNote';note.className='digital-service-note';document.querySelector('.service-modal-footer').before(note)}
+ note.textContent='We confirm suitable data sources, deliverables, access permissions, timeline and pricing before starting. AI responses and important automated actions should be reviewed by your team.';
+}
+function ensureIntelligenceServiceOptions(){
+ const select=document.getElementById('f-service');if(!select)return;
+ Object.values(INTELLIGENCE_SERVICES).forEach(x=>{if([...select.options].some(o=>o.value===x.title))return;const o=document.createElement('option');o.value=x.title;o.textContent='Business Intelligence & AI Automation — '+x.title;select.appendChild(o)});
+}
+ensureIntelligenceServiceOptions();
+document.querySelector('[data-intelligence-request]')?.addEventListener('click',()=>prefillDVLRequest('intelligence'));
+
 const CREATIVE_SERVICES={};
 
 // FRONTEND CONVERSION ROUTER — one source of truth for the service divisions.
 openDVLService=function(key){
  if(key==='business')return renderBusinessServiceMenu();
  if(key==='digital')return renderDigitalServiceMenu();
+ if(key==='intelligence')return renderIntelligenceServiceMenu();
 
  return null;
 };
 
 // Centralized conversion CTA — one listener, one source of truth.
 function resolveDVLRequest(key){
- const exact=BUSINESS_SERVICES[key]||DIGITAL_SERVICES[key]||CREATIVE_SERVICES[key];
+ const exact=BUSINESS_SERVICES[key]||DIGITAL_SERVICES[key]||INTELLIGENCE_SERVICES[key]||CREATIVE_SERVICES[key];
  if(exact){let detail='requirements and next steps';if(DIGITAL_SERVICES[key])detail='requirements, scope and next steps';if(CREATIVE_SERVICES[key])detail='assignment, deliverables and next steps';return {service:exact.title,message:'I am interested in '+exact.title+'. Please contact me to discuss the '+detail+'.'}}
  const division=DVL_SERVICES[key];return division?{service:division.title,message:'I am interested in '+division.title+'. Please contact me to discuss my requirements.'}:null
 }
