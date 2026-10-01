@@ -1,17 +1,17 @@
-# Delight Ventures Limited
+# Delight Holdings Limited
 
-Official repository for the Delight Ventures public website and supporting website backend.
+Official repository for the Delight Holdings public website and supporting website backend.
 
-**Positioning:** Helping Businesses Launch, Digitize & Grow.
+**Positioning:** Building Ventures. Connecting Possibilities.
 
 ## Current production scope
 
 ### Public website
-- Premium Delight Ventures website (`index.html`)
-- Three current service divisions:
+- Premium Delight Holdings website (`index.html`)
+- Two service divisions and the group portfolio:
   - Business & Compliance Services
   - Digital Solutions & Systems
-  - Creative Media Services
+- Portfolio: EZGo, E-School, Kwik Pay, Ecofarms and SaloneCare
 - Service-level exploration and enquiry prefilling for the exact services offered by DVL
 - About, process, case studies, insights, sectors and contact sections
 - Responsive desktop/tablet/mobile layout
